@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>A simple select plugin</title>
+    <meta charset="utf-8" />
+
+    <link media="all" rel="stylesheet" type="text/css" href="vendor/bower/fontawesome/css/font-awesome.min.css" />
+    <link media="all" rel="stylesheet" type="text/css" href="lib/select.css" />
+    <style type="text/css" media="all">
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 400px;
+            margin: 50px auto;
+        }
+
+        .demo-one {
+            margin-bottom: 250px;
+        }
+
+        input.error {
+          border: 1px solid #c21;
+        }
+    </style>
+
+    <script type="text/javascript" src="vendor/bower/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="vendor/bower/jquery-mousewheel/jquery.mousewheel.min.js"></script>
+    <script type="text/javascript" src="vendor/bower/simple-module/lib/module.js"></script>
+    <script type="text/javascript" src="lib/select.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            simple.select({
+                el: $('#select-one'),
+                placeholder: 'type sth...'
+            });
+
+            var select = simple.select({
+                el: $('#select-two'),
+                placeholder: 'type sth...',
+                onItemRender: function($itemEl, item) {
+                    $itemEl.find('.label').prepend("<i class='fa fa-male'></i> ");
+                }
+            });
+
+            select.setItems([{
+              label: "张三",
+              key: "zhangsan zs",
+              id: "1"
+            },{
+              label: "李四",
+              key: "lisi ls",
+              id: "2"
+            },{
+              label: "王麻子",
+              key: "wangmazi wmz",
+              id: "3"
+            }]);
+
+            select.on('select', function(e, item) {
+                select.el.after("<p>" + item.label + "</p>");
+            });
+        });
+    </script>
+
+</head>
+<body>
+    <div class="wrapper">
+        <div class="demo-one">
+            <h3>Demo one</h3>
+            <select id="select-one">
+                <option data-key="George Washington">George Washington</option>
+                <option data-key="John Adams">John Adams</option>
+                <option data-key="Thomas Jefferson">Thomas Jefferson</option>
+                <option data-key="George Washington">George Washington</option>
+                <option data-key="John Adams">John Adams</option>
+                <option data-key="Thomas Jefferson">Thomas Jefferson</option>
+                <option data-key="George Washington">George Washington</option>
+                <option data-key="John Adams">John Adams</option>
+                <option data-key="Thomas Jefferson">Thomas Jefferson</option>
+                <option data-key="George Washington">George Washington</option>
+                <option data-key="John Adams">John Adams</option>
+                <option data-key="Thomas Jefferson">Thomas Jefferson</option>
+            </select>
+        </div>
+
+        <div class="demo-two">
+            <h3>Demo two</h3>
+
+            <select id="select-two">
+            </select>
+        </div>
+    </div>
+</body>
+</html>

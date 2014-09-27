@@ -1,0 +1,22 @@
+{
+  "name": "simple-select",
+  "version": "0.0.1",
+  "description": "a simple select plugin",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mycolorway/simple-select.git"
+  },
+  "author": "kshift",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mycolorway/simple-select/issues"
+  },
+  "homepage": "https://github.com/mycolorway/simple-select",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-coffee": "~0.10.1",
+    "grunt-contrib-jasmine": "~0.6.1",
+    "grunt-contrib-sass": "~0.7.3"
+  }
+}
