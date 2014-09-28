@@ -94,9 +94,8 @@ class Select extends Widget
     @list.on "mousedown", (e) =>
       if simple.browser.msie
         @_scrollMousedown = true
-        setTimeout =>
-          @input.focus()
-        , 0
+        @input[0].offsetHeight  # reflow
+        @input.focus()
       return false
     .on "mousewheel", (e, delta) ->
       $(@).scrollTop($(@).scrollTop() - 25 * delta)
@@ -145,7 +144,6 @@ class Select extends Widget
 
     else if e.which is 13  # enter
       e.preventDefault()
-
       if @input.hasClass "expanded"
         $selectedEl = @list.find ".select-item.selected"
         if $selectedEl.length
