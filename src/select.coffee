@@ -45,8 +45,9 @@ class Select extends SimpleModule
 
 
   _render: ->
-    @el = $(@opts.el).data("select", @).hide()
+    @el = $(@opts.el).hide()
     @select = $(Select._tpl.select)
+      .data("select", @)
       .addClass(@opts.cls)
       .insertAfter @el
     @input = $(Select._tpl.input)
@@ -95,8 +96,9 @@ class Select extends SimpleModule
     @list.on "mousedown", (e) =>
       if simple.browser.msie
         @_scrollMousedown = true
-        @input[0].offsetHeight  # reflow
-        @input.focus()
+        setTimeout =>
+          @input.focus()
+        , 0
       return false
     .on "mousewheel", (e, delta) ->
       $(@).scrollTop($(@).scrollTop() - 25 * delta)
@@ -227,7 +229,9 @@ class Select extends SimpleModule
     @_expand()
     if @_selectedIndex > -1
       @list.find(".select-item").eq(@_selectedIndex).addClass("selected")
-    @input.select()
+    setTimeout =>
+      @input.select()
+    , 0
     @_focused = true
 
 
@@ -279,7 +283,7 @@ class Select extends SimpleModule
 
   destroy: ->
     @select.remove()
-    @el.removeData("select").show()
+    @el.show()
 
 
 select = (opts) ->
