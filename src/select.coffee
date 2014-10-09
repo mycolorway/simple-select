@@ -1,4 +1,5 @@
-class Select extends Widget
+class Select extends SimpleModule
+
   opts:
     el: null
     items: null
@@ -33,7 +34,7 @@ class Select extends Widget
     """
 
 
-  _init: () ->
+  _init: ->
     unless @opts.el
       throw "simple select: option el is required"
       return
@@ -43,7 +44,7 @@ class Select extends Widget
     @_bind()
 
 
-  _render: () ->
+  _render: ->
     @el = $(@opts.el).data("select", @).hide()
     @select = $(Select._tpl.select)
       .addClass(@opts.cls)
@@ -264,7 +265,7 @@ class Select extends Widget
     return @items[@_selectedIndex] if @_selectedIndex > -1
 
 
-  clearSelection: () ->
+  clearSelection: ->
     @input.val("").removeClass("expanded error")
     @select.removeClass("selected")
     @list.hide()
@@ -281,9 +282,5 @@ class Select extends Widget
     @el.removeData("select").show()
 
 
-@simple ||= {}
-
-$.extend(@simple, {
-  select: (opts) ->
-    return new Select opts
-})
+select = (opts) ->
+  new Select(opts)

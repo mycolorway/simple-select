@@ -7,48 +7,62 @@ module.exports = (grunt) ->
     sass:
       select:
         options:
-          style: 'expanded'
           bundleExec: true
+          style: 'expanded'
+          sourcemap: 'none'
         files:
-          'lib/select.css': 'src/select.scss'
+          'styles/select.css': 'styles/select.scss'
 
     coffee:
-      select:
+      src:
+        options:
+          bare: true
         files:
           'lib/select.js': 'src/select.coffee'
       spec:
         files:
           'spec/select-spec.js': 'spec/select-spec.coffee'
 
+    umd:
+      all:
+        src: 'lib/select.js'
+        template: 'umd.hbs'
+        amdModuleId: 'simple-select'
+        objectToExport: 'select'
+        globalAlias: 'select'
+        deps:
+          'default': ['$', 'SimpleModule']
+          amd: ['jquery', 'simple-module']
+          cjs: ['jquery', 'simple-module']
+          global:
+            items: ['jQuery', 'SimpleModule']
+            prefix: ''
+
     watch:
       styles:
-        files: ['src/*.scss']
+        files: ['styles/*.scss']
         tasks: ['sass']
-      scripts:
-        files: ['src/*.coffee', 'spec/*.coffee']
-        tasks: ['coffee']
+      spec:
+        files: ['spec/**/*.coffee']
+        tasks: ['coffee:spec']
+      src:
+        files: ['src/**/*.coffee']
+        tasks: ['coffee:src', 'umd']
       jasmine:
-        files: [
-          'lib/select.css',
-          'lib/select.js',
-          'specs/*.js'
-        ],
+        files: ['lib/**/*.js', 'specs/**/*.js']
         tasks: 'jasmine:test:build'
 
     jasmine:
       test:
-        src: ['lib/select.js']
+        src: ['lib/**/*.js']
         options:
           outfile: 'spec/index.html'
-          styles: [
-            'lib/select.css',
-            'vendor/bower/fontawesome/css/font-awesome.min.css'
-          ]
+          styles: 'styles/select.css'
           specs: 'spec/select-spec.js'
           vendor: [
-            'vendor/bower/jquery/dist/jquery.min.js',
-            'vendor/bower/jquery-mousewheel/jquery.mousewheel.min.js',
-            'vendor/bower/simple-module/lib/module.js',
+            'vendor/bower/jquery/dist/jquery.min.js'
+            'vendor/bower/jquery-mousewheel/jquery.mousewheel.min.js'
+            'vendor/bower/simple-module/lib/module.js'
             'vendor/bower/simple-util/lib/util.js'
           ]
 
@@ -56,5 +70,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
+  grunt.loadNpmTasks 'grunt-umd'
 
-  grunt.registerTask 'default', ['coffee', 'jasmine:test:build', 'watch']
+  grunt.registerTask 'default', ['sass', 'coffee', 'umd', 'jasmine:test:build', 'watch']

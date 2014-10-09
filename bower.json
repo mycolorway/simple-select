@@ -5,9 +5,10 @@
   "authors": [
     "kshift <kshift.lv@gmail.com>"
   ],
-  "description": "a simple select plugin",
+  "description": "a simple select plugin based on Simple Module",
   "main": "lib/select.js",
   "keywords": [
+    "sample",
     "select"
   ],
   "license": "MIT",
@@ -19,12 +20,15 @@
     "Gemfile.lock",
     "Gruntfile.coffee",
     "package.json",
-    "README"
+    "README.md",
+    "umd.hbs"
   ],
   "dependencies": {
-    "jquery": "~2.1.0",
+    "jquery": "2.x",
+    "simple-module": "2.x",
     "fontawesome": "~4.0.3",
     "jquery-mousewheel": "~3.1.12",
-    "simple-module": "master"
+    "simple-util": "1.x"
   }
 }
+
