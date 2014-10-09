@@ -21,7 +21,8 @@
     "Gruntfile.coffee",
     "package.json",
     "README.md",
-    "umd.hbs"
+    "umd.hbs",
+    "demo.gif"
   ],
   "dependencies": {
     "jquery": "2.x",
