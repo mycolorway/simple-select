@@ -18,7 +18,7 @@ simple-select
 <script type="text/javascript" src="[script path]/jquery.min.js"></script>
 <script type="text/javascript" src="[script path]/jquery.mousewheel.min.js"></script>
 <script type="text/javascript" src="[script path]/module.js"></script>
-<!-- [simple-util](https://github.com/mycolorway/simple-util) -->
+<!-- simple-util https://github.com/mycolorway/simple-util -->
 <script type="text/javascript" src="[script path]/util.js"></script>
 <script type="text/javascript" src="[script path]/select.js"></script>
 ```
@@ -28,22 +28,21 @@ simple-select
 在使用 simple-select 的 HTML 页面里应该有一个对应的 select 元素，例如：
 
 ```html
-<select id="select-two">
-</select>
+<select></select>
 ```
 
 我们需要在这个页面的脚本里初始化 simple-select：
 
 ```javascript
 simple.select({
-    el: $('select'),           // *必须
+    el: $('select'),           // * 必须
     items: [{                  // 列表内容
       label: "张三",            // 列表元素名称
       key: "zhangsan zs 张三"   // 匹配列表元素字段
     }],
     cls: "",                   // 额外的 class
     onItemRender: $.noop,      // 渲染列表每个元素后调用的函数
-    placeholder: ""             // input 元素的 placeholder 属性
+    placeholder: ""            // input 元素的 placeholder 属性
 });
 ```
 
@@ -80,7 +79,7 @@ select.selectItem(2);
 
 #### 公共方法
 
-**setItems**
+**setItems(items)**
 
 设置 simple-select 列表元素，`label` `key` 为必须属性，所有属性都保存在对应 item 的 data 属性里：
 
@@ -100,7 +99,7 @@ select.setItems([{
 }]);
 ```
 
-**selectItem**
+**selectItem(index)**
 
 选择对应的列表元素，返回该元素的属性：
 
@@ -114,11 +113,11 @@ select.selectItem(2);
 // }
 ```
 
-**clearSelection**
+**clearSelection()**
 
 清除输入内容和选择的元素。
 
-**destroy**
+**destroy()**
 
 恢复到初始化之前的状态。
 
