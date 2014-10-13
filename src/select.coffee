@@ -7,18 +7,27 @@ class Select extends SimpleModule
     onItemRender: $.noop
     placeholder: ""
 
+  @i18n:
+    "zh-CN":
+      all_options: "所有选项"
+      clear_selection: "清除选择"
+      loading: "正在加载数据"
+    "en":
+      all_options: "All options"
+      clear_selection: "Clear Selection"
+      loading: "loading"
 
   @_tpl:
     select: """
       <div class="simple-select">
-        <span class="link-expand" title="所有选项">
+        <span class="link-expand" title="#{@::_t('all_options')}">
           <i class="fa fa-caret-down"></i>
         </span>
-        <span class="link-clear" title="清除选择">
+        <span class="link-clear" title="#{@::_t('clear_selection')}">
           <i class="fa fa-times"></i>
         </span>
         <div class="select-list">
-          <div class="loading">正在加载数据...</div>
+          <div class="loading">#{@::_t('loading')}...</div>
         </div>
       </div>
     """
