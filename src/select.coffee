@@ -60,7 +60,7 @@ class Select extends SimpleModule
       .addClass(@opts.cls)
       .insertAfter @el
     @input = $(Select._tpl.input)
-      .attr("placeholder", @opts.placeholder)
+      .attr("placeholder", @el.data("placeholder") or @opts.placeholder)
       .prependTo @select
     @list = @select.find ".select-list"
 
@@ -69,7 +69,7 @@ class Select extends SimpleModule
     else
       items = @el.find("option").map ->
         return $.extend
-          label: $(@).text()
+          label: $(@).text().trim()
         , $(@).data()
       .get()
 
@@ -94,16 +94,18 @@ class Select extends SimpleModule
 
   _bind: ->
     @select.find(".link-clear").on "mousedown", (e) =>
+      return false if @input.is "[disabled]"
       @clearSelection()
       return false
 
     @select.find(".link-expand").on "mousedown", (e) =>
+      return false if @input.is "[disabled]"
       @_expand !@input.hasClass("expanded")
       @input.focus() unless @_focused
       return false
 
     @list.on "mousedown", (e) =>
-      if simple.browser.msie
+      if simple.util.browser.msie
         @_scrollMousedown = true
         setTimeout =>
           @input.focus()
@@ -130,6 +132,7 @@ class Select extends SimpleModule
 
   _keydown: (e) ->
     return unless @items and @items.length
+    return if @triggerHandler(e) is false
 
     if e.which is 40 or e.which is 38  # up and down
       unless @input.hasClass "expanded"
@@ -247,7 +250,7 @@ class Select extends SimpleModule
   setItems: (items) ->
     return unless $.isArray(items) and items.length
     @items = items
-    @list.find(".loading").remove()
+    @list.find(".loading, .select-item").remove()
 
     for item in items
       $itemEl = $(Select._tpl.item).data(item)
