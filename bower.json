@@ -27,9 +27,9 @@
   "dependencies": {
     "jquery": "2.x",
     "simple-module": "2.x",
-    "fontawesome": "~4.0.3",
-    "jquery-mousewheel": "~3.1.12",
-    "simple-util": "1.x"
+    "fontawesome": "~4.x",
+    "jquery-mousewheel": "~3.x",
+    "simple-util": "2.x"
   }
 }
 
