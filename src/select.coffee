@@ -94,12 +94,10 @@ class Select extends SimpleModule
 
   _bind: ->
     @select.find(".link-clear").on "mousedown", (e) =>
-      return false if @input.is "[disabled]"
       @clearSelection()
       return false
 
     @select.find(".link-expand").on "mousedown", (e) =>
-      return false if @input.is "[disabled]"
       @_expand !@input.hasClass("expanded")
       @input.focus() unless @_focused
       return false
@@ -291,6 +289,16 @@ class Select extends SimpleModule
 
     @_selectedIndex = -1
     @trigger "clear"
+
+
+  disable: ->
+    @input.prop "disabled", true
+    @select.find(".link-expand, .link-clear").hide()
+
+
+  enable: ->
+    @input.prop "disabled", false
+    @select.find(".link-expand, .link-clear").attr("style", "")
 
 
   destroy: ->
