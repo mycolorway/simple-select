@@ -202,7 +202,7 @@ class Select extends SimpleModule
       catch e
         re = new RegExp("", "i")
 
-      results = $itemEls.hide().filter ->
+      results = $itemEls.hide().removeClass("selected").filter ->
         return re.test $(@).data("key")
 
       if results.length
