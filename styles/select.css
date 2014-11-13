@@ -44,7 +44,7 @@
   color: #999999;
   position: absolute;
   top: 1px;
-  right: -2px;
+  right: 1px;
 }
 .simple-select .link-clear:hover, .simple-select .link-expand:hover {
   opacity: 0.8;
@@ -93,6 +93,9 @@
   color: #666666;
   border-bottom: 1px solid #dfdfdf;
   cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .simple-select .select-list .select-item:first-child {
   -webkit-border-radius: 4px 4px 0 0;

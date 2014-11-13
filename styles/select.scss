@@ -48,7 +48,7 @@
     color: #999999;
     position: absolute;
     top: 1px;
-    right: -2px;
+    right: 1px;
 
     &:hover {
       opacity: 0.8;
@@ -106,6 +106,9 @@
       color: #666666;
       border-bottom: 1px solid #dfdfdf;
       cursor: pointer;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
 
       &:first-child {
         -webkit-border-radius: 4px 4px 0 0;
