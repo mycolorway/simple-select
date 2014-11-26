@@ -82,7 +82,7 @@ class Select extends SimpleModule
       @list.hide()
     else
       @input.addClass "expanded"
-      @list.show()
+      @list.show() if @items.length > 0
       @_scrollToSelected() if @_selectedIndex > -1
 
 
@@ -193,7 +193,7 @@ class Select extends SimpleModule
 
       value = $.trim @input.val()
       unless value
-        @list.show()
+        @list.show() if @items.length > 0
         $itemEls.show().removeClass "selected"
         return
 
@@ -206,7 +206,7 @@ class Select extends SimpleModule
         return re.test $(@).data("key")
 
       if results.length
-        @list.show()
+        @list.show() if @items.length > 0
         results.show().first().addClass "selected"
       else
         @list.hide()
