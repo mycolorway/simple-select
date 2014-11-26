@@ -246,7 +246,7 @@ class Select extends SimpleModule
 
 
   setItems: (items) ->
-    return unless $.isArray(items) and items.length
+    return unless $.isArray(items)
     @items = items
     @list.find(".loading, .select-item").remove()
 
