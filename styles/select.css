@@ -34,6 +34,9 @@
 .simple-select .select-result.placeholder {
   color: #999999 !important;
 }
+.simple-select .select-result[disabled] {
+  cursor: default;
+}
 .simple-select .link-clear, .simple-select .link-expand {
   display: block;
   width: 24px;

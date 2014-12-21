@@ -36,6 +36,10 @@
     &.placeholder {
       color: #999999 !important;
     }
+
+    &[disabled] {
+      cursor: default;
+    }
   }
 
   .link-clear, .link-expand {
