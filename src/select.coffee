@@ -198,7 +198,7 @@ class Select extends SimpleModule
         return
 
       try
-        re = new RegExp("(^|\\s)" + value, "i")
+        re = new RegExp("(|\\s)" + value, "i")
       catch e
         re = new RegExp("", "i")
 
