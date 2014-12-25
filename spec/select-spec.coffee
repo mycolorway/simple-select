@@ -1,8 +1,8 @@
 selectEl = $("""
   <select id="select-one">
-    <option data-key="George Washington">George Washington</option>
-    <option data-key="John Adams">John Adams</option>
-    <option data-key="Thomas Jefferson">Thomas Jefferson</option>
+    <option value="0" data-key="George Washington">George Washington</option>
+    <option value="1" data-key="John Adams">John Adams</option>
+    <option value="2" data-key="Thomas Jefferson">Thomas Jefferson</option>
   </select>
   """)
 
@@ -49,6 +49,16 @@ describe 'Simple Select', ->
       expect(target.length and target.hasClass("selected")).toBe(true)
       done()
     , 10
+
+  it "should set original select form element value according to select item", ->
+    selectEl.appendTo("body")
+    select = simple.select
+      el: $("#select-one")
+
+    select.selectItem(1)
+    expect(select.el.val()).toBe('1')
+    select.clearSelection()
+    expect(select.el.val()).toBe(null)
 
   it "should see 'select-list' if click 'link-expand'", ->
     selectEl.appendTo("body")

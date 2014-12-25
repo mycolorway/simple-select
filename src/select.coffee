@@ -70,6 +70,7 @@ class Select extends SimpleModule
       items = @el.find("option").map ->
         return $.extend
           label: $(@).text().trim()
+          _value: $(@).attr 'value'
         , $(@).data()
       .get()
 
@@ -274,6 +275,7 @@ class Select extends SimpleModule
         .addClass "selected"
 
       @_selectedIndex = index
+      @el.val item._value
       @trigger "select", [item]
 
     return @items[@_selectedIndex] if @_selectedIndex > -1
@@ -288,6 +290,7 @@ class Select extends SimpleModule
       .removeClass "selected"
 
     @_selectedIndex = -1
+    @el.val ''
     @trigger "clear"
 
 

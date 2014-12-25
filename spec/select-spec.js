@@ -1,7 +1,7 @@
 (function() {
   var selectEl;
 
-  selectEl = $("<select id=\"select-one\">\n  <option data-key=\"George Washington\">George Washington</option>\n  <option data-key=\"John Adams\">John Adams</option>\n  <option data-key=\"Thomas Jefferson\">Thomas Jefferson</option>\n</select>");
+  selectEl = $("<select id=\"select-one\">\n  <option value=\"0\" data-key=\"George Washington\">George Washington</option>\n  <option value=\"1\" data-key=\"John Adams\">John Adams</option>\n  <option value=\"2\" data-key=\"Thomas Jefferson\">Thomas Jefferson</option>\n</select>");
 
   afterEach(function() {
     $(".simple-select").each(function() {
@@ -51,6 +51,17 @@
         expect(target.length && target.hasClass("selected")).toBe(true);
         return done();
       }, 10);
+    });
+    it("should set original select form element value according to select item", function() {
+      var select;
+      selectEl.appendTo("body");
+      select = simple.select({
+        el: $("#select-one")
+      });
+      select.selectItem(1);
+      expect(select.el.val()).toBe('1');
+      select.clearSelection();
+      return expect(select.el.val()).toBe(null);
     });
     it("should see 'select-list' if click 'link-expand'", function() {
       var select;
