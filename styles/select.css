@@ -45,6 +45,7 @@
   position: absolute;
   top: 1px;
   right: 1px;
+  cursor: pointer;
 }
 .simple-select .link-clear:hover, .simple-select .link-expand:hover {
   opacity: 0.8;
