@@ -167,14 +167,14 @@ class Select extends SimpleModule
         if $selectedEl.length
           index = @list.find(".select-item").index $selectedEl
           @selectItem index
-          return
+          return false
       else if @_selectedIndex > -1
         @selectItem @_selectedIndex
 
       if @opts.allowInput
         @el.val ''
         @trigger 'select', [{label: @input.val(), _value: -1}]
-        return
+        return false
 
       @clearSelection()
       return false
