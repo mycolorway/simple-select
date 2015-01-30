@@ -77,8 +77,8 @@ class Select extends SimpleModule
 
     @setItems items
 
-    if @el.is('select') and @opts.allowInput
-      @el.append('<option />')
+    if @el.is('select') and @el.find('option[value=""], option:not([value])').length < 1
+      @el.append('<option value="" />')
 
 
   _expand: (expand) ->
