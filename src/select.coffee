@@ -172,8 +172,7 @@ class Select extends SimpleModule
         @selectItem @_selectedIndex
 
       if @opts.allowInput
-        @el.val ''
-        @trigger 'select', [{label: @input.val(), _value: -1}]
+        @input.blur()
         return false
 
       @clearSelection()
