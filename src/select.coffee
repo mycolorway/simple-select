@@ -6,6 +6,7 @@ class Select extends SimpleModule
     cls: ""
     onItemRender: $.noop
     placeholder: ""
+    allowInput: false
 
   @i18n:
     "zh-CN":
@@ -75,6 +76,9 @@ class Select extends SimpleModule
       .get()
 
     @setItems items
+
+    if @el.is('select') and @opts.allowInput
+      @el.append('<option />')
 
 
   _expand: (expand) ->
@@ -163,12 +167,15 @@ class Select extends SimpleModule
         if $selectedEl.length
           index = @list.find(".select-item").index $selectedEl
           @selectItem index
-        else
-          @clearSelection()
+          return
       else if @_selectedIndex > -1
         @selectItem @_selectedIndex
-      else
-        @clearSelection()
+
+      if @opts.allowInput
+        @trigger 'select', [{label: @input.val(), _value: -1}]
+        return
+
+      @clearSelection()
 
     else if e.which is 27  # esc
       e.preventDefault()
@@ -226,15 +233,18 @@ class Select extends SimpleModule
       .removeClass "selected"
 
     value = $.trim @input.val()
-    if !@select.hasClass("selected") and value
-      matchIdx = -1
-      $.each @items, (i, item) ->
-        if (item.label is value)
-          matchIdx = i
-          return false
-      if matchIdx >= 0 then @selectItem matchIdx else @input.addClass "error"
-    @_focused = false
+    if !@select.hasClass("selected")
+      if @opts.allowInput
+        @trigger 'select', [{label: value, _value: -1}]
+      else if value
+        matchIdx = -1
+        $.each @items, (i, item) ->
+          if (item.label is value)
+            matchIdx = i
+            return false
+        if matchIdx >= 0 then @selectItem matchIdx else @input.addClass "error"
 
+    @_focused = false
 
   _focus: (e) ->
     @_expand()
