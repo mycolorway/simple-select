@@ -172,10 +172,12 @@ class Select extends SimpleModule
         @selectItem @_selectedIndex
 
       if @opts.allowInput
+        @el.val ''
         @trigger 'select', [{label: @input.val(), _value: -1}]
         return
 
       @clearSelection()
+      return false
 
     else if e.which is 27  # esc
       e.preventDefault()
@@ -235,6 +237,7 @@ class Select extends SimpleModule
     value = $.trim @input.val()
     if !@select.hasClass("selected")
       if @opts.allowInput
+        @el.val ''
         @trigger 'select', [{label: value, _value: -1}]
       else if value
         matchIdx = -1
