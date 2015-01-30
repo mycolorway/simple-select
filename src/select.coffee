@@ -68,12 +68,17 @@ class Select extends SimpleModule
     if @opts.items
       items = @opts.items
     else
-      items = @el.find("option").map ->
-        return $.extend
-          label: $(@).text().trim()
-          _value: $(@).attr 'value'
-        , $(@).data()
-      .get()
+      items = []
+      @el.find("option").each (i, option) ->
+        $option = $(option)
+        value = $option.attr 'value'
+        label = $option.text().trim()
+        return unless value
+
+        items.push $.extend({
+          label: label,
+          _value: value
+        }, $option.data())
 
     @setItems items
 
