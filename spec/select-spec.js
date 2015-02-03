@@ -1,7 +1,11 @@
 (function() {
   var selectEl;
 
-  selectEl = $("<select id=\"select-one\">\n  <option value=\"0\" data-key=\"George Washington\">George Washington</option>\n  <option value=\"1\" data-key=\"John Adams\">John Adams</option>\n  <option value=\"2\" data-key=\"Thomas Jefferson\">Thomas Jefferson</option>\n</select>");
+  selectEl = null;
+
+  beforeEach(function() {
+    return selectEl = $("<select id=\"select-one\">\n  <option value=\"0\" data-key=\"George Washington\">George Washington</option>\n  <option value=\"1\" data-key=\"John Adams\">John Adams</option>\n  <option value=\"2\" data-key=\"Thomas Jefferson\">Thomas Jefferson</option>\n</select>");
+  });
 
   afterEach(function() {
     $(".simple-select").each(function() {
@@ -91,7 +95,7 @@
       $(".link-clear").trigger("mousedown");
       return expect($(".select-result").val().length).toBe(0);
     });
-    return it("should work if use setItems to set items", function() {
+    it("should work if use setItems to set items", function() {
       var select;
       $("<select id=\"select-two\"></select>").appendTo("body");
       select = simple.select({
@@ -113,6 +117,40 @@
         }
       ]);
       return expect($("body .simple-select .select-item").length).toBe(3);
+    });
+    it('should not show option without value', function() {
+      var select;
+      selectEl.append('<option value></option>');
+      selectEl.appendTo("body");
+      select = simple.select({
+        el: $("#select-one")
+      });
+      $(".link-expand").trigger("mousedown");
+      return expect($("body .simple-select .select-item:visible").length).toBe(3);
+    });
+    it('should always select default value if all options with value', function() {
+      var select;
+      selectEl.find('option[value=2]').prop('selected', true);
+      selectEl.appendTo("body");
+      select = simple.select({
+        el: $("#select-one")
+      });
+      expect(select.el.val()).toBe('2');
+      select.clearSelection();
+      select.input.blur();
+      return expect(select.el.val()).toBe('0');
+    });
+    return it('should always select default value if one option without value', function() {
+      var select;
+      selectEl.append('<option value></option>');
+      selectEl.appendTo("body");
+      select = simple.select({
+        el: $("#select-one")
+      });
+      select.clearSelection();
+      select.input.blur();
+      expect(select.requireSelect).toBe(false);
+      return expect(select.el.val()).toBe('');
     });
   });
 

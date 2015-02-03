@@ -36,17 +36,13 @@ simple-select
 ```javascript
 simple.select({
     el: $('select'),           // * 必须
-    items: [{                  // 列表内容
-      label: "张三",            // 列表元素名称
-      key: "zhangsan zs 张三"   // 匹配列表元素字段
-    }],
     cls: "",                   // 额外的 class
     onItemRender: $.noop,      // 渲染列表每个元素后调用的函数
     placeholder: ""            // input 元素的 placeholder 属性
 });
 ```
 
-除了调用 `simple.select` 时设置 `items` 属性，还可以通过 `<select>` 元素生成列表元素，如：
+组件会通过 `<select>` 元素生成列表元素，如：
 
 ```html
 <select>

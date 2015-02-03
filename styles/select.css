@@ -35,6 +35,12 @@
 .simple-select.selected .link-clear {
   display: block;
 }
+.simple-select.require-select .link-expand {
+  display: block !important;
+}
+.simple-select.require-select .link-clear {
+  display: none !important;
+}
 .simple-select .select-list {
   display: none;
   width: 100%;
