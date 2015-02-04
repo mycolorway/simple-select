@@ -44,6 +44,16 @@
     }
   }
 
+  &.require-select {
+    .link-expand {
+      display: block!important;
+    }
+
+    .link-clear {
+      display: none!important;
+    }
+  }
+
   .select-list {
     display: none;
     width: 100%;

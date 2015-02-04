@@ -1,10 +1,13 @@
-selectEl = $("""
-  <select id="select-one">
-    <option value="0" data-key="George Washington">George Washington</option>
-    <option value="1" data-key="John Adams">John Adams</option>
-    <option value="2" data-key="Thomas Jefferson">Thomas Jefferson</option>
-  </select>
-  """)
+selectEl = null
+
+beforeEach ->
+  selectEl = $("""
+    <select id="select-one">
+      <option value="0" data-key="George Washington">George Washington</option>
+      <option value="1" data-key="John Adams">John Adams</option>
+      <option value="2" data-key="Thomas Jefferson">Thomas Jefferson</option>
+    </select>
+    """)
 
 afterEach ->
   $(".simple-select").each () ->
@@ -112,4 +115,37 @@ describe 'Simple Select', ->
 
     expect($("body .simple-select .select-item").length).toBe(3)
 
+  it 'should not show option without value', ->
+    selectEl.append('<option value></option>')
+    selectEl.appendTo("body")
+    select = simple.select
+      el: $("#select-one")
+
+    $(".link-expand").trigger("mousedown")
+    expect($("body .simple-select .select-item:visible").length).toBe(3)
+
+  it 'should always select default value if all options with value', ->
+    selectEl.find('option[value=2]').prop('selected', true)
+    selectEl.appendTo("body")
+    select = simple.select
+      el: $("#select-one")
+
+    expect(select.el.val()).toBe('2')
+
+    select.clearSelection()
+    select.input.blur()
+
+    expect(select.el.val()).toBe('0')
+
+  it 'should always select default value if one option without value', ->
+    selectEl.append('<option value></option>')
+    selectEl.appendTo("body")
+    select = simple.select
+      el: $("#select-one")
+
+    select.clearSelection()
+    select.input.blur()
+
+    expect(select.requireSelect).toBe(false)
+    expect(select.el.val()).toBe('')
 

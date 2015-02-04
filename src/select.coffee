@@ -2,11 +2,11 @@ class Select extends SimpleModule
 
   opts:
     el: null
-    items: null
     cls: ""
     onItemRender: $.noop
     placeholder: ""
     allowInput: false
+
 
   @i18n:
     "zh-CN":
@@ -65,26 +65,32 @@ class Select extends SimpleModule
       .prependTo @select
     @list = @select.find ".select-list"
 
-    if @opts.items
-      items = @opts.items
-    else
-      items = []
-      @el.find("option").each (i, option) ->
-        $option = $(option)
-        value = $option.attr 'value'
-        label = $option.text().trim()
-        return unless value
+    @requireSelect = true
 
-        items.push $.extend({
-          label: label,
-          _value: value
-        }, $option.data())
+    items = []
+    @el.find("option").each (i, option) =>
+      $option = $(option)
+      value = $option.attr 'value'
+      label = $option.text().trim()
+
+      unless value
+        @requireSelect = false
+        return
+
+      items.push $.extend({
+        label: label,
+        _value: value
+      }, $option.data())
+
+    if @requireSelect
+      @select.addClass('require-select')
 
     @setItems items
 
-    if @el.is('select') and @el.find('option[value=""], option:not([value])').length < 1
-      @el.append('<option value="" />')
-
+    for it, idx in items
+      if it._value is @el.val()
+        @selectItem idx
+        break
 
   _expand: (expand) ->
     if expand is false
@@ -187,7 +193,7 @@ class Select extends SimpleModule
       e.preventDefault()
       @input.blur()
 
-    else if e.which is 27  # backspace
+    else if e.which is 8  # backspace
       @clearSelection() if @select.hasClass "selected"
       @_expand() unless @input.hasClass "expanded"
 
@@ -249,7 +255,14 @@ class Select extends SimpleModule
           if (item.label is value)
             matchIdx = i
             return false
-        if matchIdx >= 0 then @selectItem matchIdx else @input.addClass "error"
+        if matchIdx >= 0
+          @selectItem matchIdx
+        else
+          @selectItem Math.max(@_selectedIndex || -1, 0)
+      else if @requireSelect
+        @selectItem 0
+      else
+        @el.val ''
 
     @_focused = false
 
