@@ -24,6 +24,10 @@
     &:hover {
       opacity: 0.8;
     }
+
+    > i span {
+      font-style: normal;
+    }
   }
 
   .link-expand {

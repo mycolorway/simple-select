@@ -23,6 +23,9 @@
 .simple-select .link-clear:hover, .simple-select .link-expand:hover {
   opacity: 0.8;
 }
+.simple-select .link-clear > i span, .simple-select .link-expand > i span {
+  font-style: normal;
+}
 .simple-select .link-expand {
   font-size: 14px;
 }
