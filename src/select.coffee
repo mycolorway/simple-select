@@ -22,10 +22,10 @@ class Select extends SimpleModule
     select: """
       <div class="simple-select">
         <span class="link-expand" title="#{@::_t('all_options')}">
-          <i class="fa fa-caret-down"></i>
+          <i class="icon-caret-down"><span>&#9662;</span></i>
         </span>
         <span class="link-clear" title="#{@::_t('clear_selection')}">
-          <i class="fa fa-times"></i>
+          <i class="icon-delete"><span>&#10005;</span></i>
         </span>
         <div class="select-list">
           <div class="loading">#{@::_t('loading')}...</div>
