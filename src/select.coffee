@@ -7,7 +7,6 @@ class Select extends SimpleModule
     placeholder: ""
     allowInput: false
 
-
   @i18n:
     "zh-CN":
       all_options: "所有选项"
@@ -19,20 +18,6 @@ class Select extends SimpleModule
       loading: "loading"
 
   @_tpl:
-    select: """
-      <div class="simple-select">
-        <span class="link-expand" title="#{@::_t('all_options')}">
-          <i class="icon-caret-down"><span>&#9662;</span></i>
-        </span>
-        <span class="link-clear" title="#{@::_t('clear_selection')}">
-          <i class="icon-delete"><span>&#10005;</span></i>
-        </span>
-        <div class="select-list">
-          <div class="loading">#{@::_t('loading')}...</div>
-        </div>
-      </div>
-    """
-
     input: """
       <input type="text" class="select-result" autocomplete="off">
     """
@@ -42,7 +27,6 @@ class Select extends SimpleModule
         <a href="javascript:;" class="label"><span></span></a>
       </div>
     """
-
 
   _init: ->
     unless @opts.el
@@ -55,6 +39,20 @@ class Select extends SimpleModule
 
 
   _render: ->
+    Select._tpl.select = """
+      <div class="simple-select">
+        <span class="link-expand" title="#{@_t('all_options')}">
+          <i class="icon-caret-down"><span>&#9662;</span></i>
+        </span>
+        <span class="link-clear" title="#{@_t('clear_selection')}">
+          <i class="icon-delete"><span>&#10005;</span></i>
+        </span>
+        <div class="select-list">
+          <div class="loading">#{@_t('loading')}...</div>
+        </div>
+      </div>
+    """
+
     @el = $(@opts.el).hide()
     @select = $(Select._tpl.select)
       .data("select", @)

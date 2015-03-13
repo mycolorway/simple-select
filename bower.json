@@ -1,6 +1,6 @@
 {
   "name": "simple-select",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "homepage": "https://github.com/mycolorway/simple-select",
   "authors": [
     "kshift <kshift.lv@gmail.com>"
@@ -31,4 +31,3 @@
     "simple-util": "2.x"
   }
 }
-
