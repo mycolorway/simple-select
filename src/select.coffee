@@ -57,7 +57,7 @@ class Select extends SimpleModule
     @select = $(Select._tpl.select)
       .data("select", @)
       .addClass(@opts.cls)
-      .insertAfter @el
+      .insertBefore @el
     @input = $(Select._tpl.input)
       .attr("placeholder", @el.data("placeholder") or @opts.placeholder)
       .prependTo @select
