@@ -117,14 +117,11 @@ class Select extends SimpleModule
       return false
 
     @list.on "mousedown", (e) =>
-      if simple.util.browser.msie
+      if window.navigator.userAgent.toLowerCase().indexOf('msie') > -1
         @_scrollMousedown = true
         setTimeout =>
           @input.focus()
         , 0
-      return false
-    .on "mousewheel", (e, delta) ->
-      $(@).scrollTop($(@).scrollTop() - 25 * delta)
       return false
     .on "mousedown", ".select-item", (e) =>
       index = @list.find(".select-item").index $(e.currentTarget)
