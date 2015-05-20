@@ -31,11 +31,11 @@ module.exports = (grunt) ->
         objectToExport: 'select'
         globalAlias: 'select'
         deps:
-          'default': ['$', 'SimpleModule', 'simpleUtil']
-          amd: ['jquery', 'simple-module', 'simple-util']
-          cjs: ['jquery', 'simplemodule', 'simple-util']
+          'default': ['$', 'SimpleModule']
+          amd: ['jquery', 'simple-module']
+          cjs: ['jquery', 'simple-module']
           global:
-            items: ['jQuery', 'SimpleModule', 'simple.util']
+            items: ['jQuery', 'SimpleModule']
             prefix: ''
 
     watch:
