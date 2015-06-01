@@ -2,6 +2,7 @@
   "name": "simple-select",
   "version": "2.0.8",
   "description": "a simple select plugin based on Simple Module",
+  "main": "lib/select.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:mycolorway/simple-select.git"
