@@ -149,12 +149,20 @@ describe 'Simple Select', ->
     expect(select.requireSelect).toBe(false)
     expect(select.el.val()).toBe('')
 
-  it "keep reference in el", ->
+  it "should keep reference in el", ->
     selectEl.appendTo("body")
     select = simple.select
       el: $("#select-one")
-
     expect(selectEl.data('select')).toBe(select)
+
+  it "should destroy reference in el after destroy", ->
+    selectEl.appendTo("body")
+    select = simple.select
+      el: $("#select-one")
+    select.destroy()
+    expect(selectEl.data('select')).not.toBe(select)
+
+    
 
     
 
