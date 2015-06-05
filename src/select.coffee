@@ -54,6 +54,7 @@ class Select extends SimpleModule
     """
 
     @el = $(@opts.el).hide()
+    @el.data("select", @)
     @select = $(Select._tpl.select)
       .data("select", @)
       .addClass(@opts.cls)
