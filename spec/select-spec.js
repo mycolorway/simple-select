@@ -140,7 +140,7 @@
       select.input.blur();
       return expect(select.el.val()).toBe('0');
     });
-    return it('should always select default value if one option without value', function() {
+    it('should always select default value if one option without value', function() {
       var select;
       selectEl.append('<option value></option>');
       selectEl.appendTo("body");
@@ -151,6 +151,14 @@
       select.input.blur();
       expect(select.requireSelect).toBe(false);
       return expect(select.el.val()).toBe('');
+    });
+    return it("keep reference in el", function() {
+      var select;
+      selectEl.appendTo("body");
+      select = simple.select({
+        el: $("#select-one")
+      });
+      return expect(selectEl.data('select')).toBe(select);
     });
   });
 

@@ -149,3 +149,12 @@ describe 'Simple Select', ->
     expect(select.requireSelect).toBe(false)
     expect(select.el.val()).toBe('')
 
+  it "keep reference in el", ->
+    selectEl.appendTo("body")
+    select = simple.select
+      el: $("#select-one")
+
+    expect(selectEl.data('select')).toBe(select)
+
+    
+
