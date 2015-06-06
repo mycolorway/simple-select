@@ -332,6 +332,7 @@ class Select extends SimpleModule
 
   destroy: ->
     @select.remove()
+    @el.removeData 'select'
     @el.show()
 
 

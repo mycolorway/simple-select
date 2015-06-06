@@ -152,13 +152,22 @@
       expect(select.requireSelect).toBe(false);
       return expect(select.el.val()).toBe('');
     });
-    return it("keep reference in el", function() {
+    it("should keep reference in el", function() {
       var select;
       selectEl.appendTo("body");
       select = simple.select({
         el: $("#select-one")
       });
       return expect(selectEl.data('select')).toBe(select);
+    });
+    return it("should destroy reference in el after destroy", function() {
+      var select;
+      selectEl.appendTo("body");
+      select = simple.select({
+        el: $("#select-one")
+      });
+      select.destroy();
+      return expect(selectEl.data('select')).not.toBe(select);
     });
   });
 
