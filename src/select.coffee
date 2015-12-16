@@ -11,11 +11,11 @@ class Select extends SimpleModule
     "zh-CN":
       all_options: "所有选项"
       clear_selection: "清除选择"
-      loading: "正在加载数据"
+      loading: "加载中..."
     "en":
       all_options: "All options"
       clear_selection: "Clear Selection"
-      loading: "loading"
+      loading: "Loading..."
 
   @_tpl:
     input: """
@@ -48,7 +48,7 @@ class Select extends SimpleModule
           <i class="icon-delete"><span>&#10005;</span></i>
         </span>
         <div class="select-list">
-          <div class="loading">#{@_t('loading')}...</div>
+          <div class="loading">#{@_t('loading')}</div>
         </div>
       </div>
     """
@@ -60,7 +60,7 @@ class Select extends SimpleModule
       .addClass(@opts.cls)
       .insertBefore @el
     @input = $(Select._tpl.input)
-      .attr("placeholder", @el.data("placeholder") or @opts.placeholder)
+      .attr("placeholder", @el.data('loading') || @_t('loading'))
       .prependTo @select
     @list = @select.find ".select-list"
 
@@ -85,11 +85,6 @@ class Select extends SimpleModule
       @select.addClass('require-select')
 
     @setItems items
-
-    for it, idx in items
-      if it._value is @el.val()
-        @selectItem idx
-        break
 
   _expand: (expand) ->
     if expand is false
@@ -255,7 +250,7 @@ class Select extends SimpleModule
           @selectItem matchIdx
         else
           @selectItem Math.max(@_selectedIndex || -1, 0)
-      else if @requireSelect
+      else if @requireSelect and @items.length > 0
         @selectItem 0
       else
         @el.val ''
@@ -275,7 +270,10 @@ class Select extends SimpleModule
   setItems: (items) ->
     return unless $.isArray(items)
     @items = items
+
+    return unless items.length > 0
     @list.find(".loading, .select-item").remove()
+    @input.attr("placeholder", @el.data("placeholder") || @opts.placeholder)
 
     for item in items
       $itemEl = $(Select._tpl.item).data(item)
@@ -284,6 +282,10 @@ class Select extends SimpleModule
       @list.append $itemEl
       @opts.onItemRender.call(@, $itemEl, item)  if $.isFunction @opts.onItemRender
 
+    for it, idx in items
+      if it._value is @el.val()
+        @selectItem idx
+        break
 
   selectItem: (index) ->
     return unless @items
