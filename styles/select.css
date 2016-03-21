@@ -98,3 +98,7 @@
   color: #666666;
   text-decoration: none;
 }
+.simple-select .select-list .select-item .hint {
+  float: right;
+  color: #aaa;
+}
