@@ -25,6 +25,7 @@ class Select extends SimpleModule
     item: """
       <div class="select-item">
         <a href="javascript:;" class="label"><span></span></a>
+        <span class="hint"></span>
       </div>
     """
 
@@ -66,8 +67,7 @@ class Select extends SimpleModule
 
     @requireSelect = true
 
-    items = []
-    @el.find("option").each (i, option) =>
+    items = @el.find("option").map (i, option) =>
       $option = $(option)
       value = $option.attr 'value'
       label = $option.text().trim()
@@ -76,10 +76,11 @@ class Select extends SimpleModule
         @requireSelect = false
         return
 
-      items.push $.extend({
+      $.extend({
         label: label,
         _value: value
       }, $option.data())
+    .get()
 
     if @requireSelect
       @select.addClass('require-select')
@@ -278,6 +279,7 @@ class Select extends SimpleModule
     for item in items
       $itemEl = $(Select._tpl.item).data(item)
       $itemEl.find(".label span").text(item.label)
+      $itemEl.find(".hint").text(item.hint)
 
       @list.append $itemEl
       @opts.onItemRender.call(@, $itemEl, item)  if $.isFunction @opts.onItemRender

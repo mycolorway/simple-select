@@ -81,14 +81,17 @@ select.selectItem(2);
 ```javascript
 select.setItems([{
   label: "张三",
+  hint: '#1',
   key: "zhangsan zs 张三",
   id: "1"
 },{
   label: "李四",
+  hint: '#2',
   key: "lisi ls 李四",
   id: "2"
 },{
   label: "王麻子",
+  hint: '#3',
   key: "wangmazi wmz 王麻子",
   id: "3"
 }]);
@@ -103,6 +106,7 @@ select.selectItem(2);
 // 返回
 // {
 //   label: "王麻子",
+//   hint: '#2',
 //   key: "wangmazi wmz 王麻子",
 //   id: "3"
 // }
@@ -126,4 +130,3 @@ select.selectItem(2);
 **clear**
 
 触发条件：清除输入内容和选择的元素。
-
