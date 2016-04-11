@@ -160,7 +160,7 @@
       });
       return expect(selectEl.data('select')).toBe(select);
     });
-    return it("should destroy reference in el after destroy", function() {
+    it("should destroy reference in el after destroy", function() {
       var select;
       selectEl.appendTo("body");
       select = simple.select({
@@ -168,6 +168,28 @@
       });
       select.destroy();
       return expect(selectEl.data('select')).not.toBe(select);
+    });
+    it("should set placeholder by setting data-placeholder", function() {
+      var hint, select;
+      hint = "some hint text";
+      selectEl.data("placeholder", hint);
+      selectEl.appendTo("body");
+      select = simple.select({
+        el: $("#select-one")
+      });
+      return expect(select.input.attr("placeholder")).toBe(hint);
+    });
+    return it("should override data-placeholder by setting placeholder in opt", function() {
+      var anotherHint, hint, select;
+      hint = "some hint text";
+      anotherHint = "another hint text";
+      selectEl.data("placeholder", hint);
+      selectEl.appendTo("body");
+      select = simple.select({
+        el: $("#select-one"),
+        placeholder: anotherHint
+      });
+      return expect(select.input.attr("placeholder")).toBe(anotherHint);
     });
   });
 
