@@ -61,7 +61,7 @@ class Select extends SimpleModule
       .addClass(@opts.cls)
       .insertBefore @el
     @input = $(Select._tpl.input)
-      .attr("placeholder", @el.data('loading') || @_t('loading'))
+      .attr("placeholder", @opts.placeholder || @el.data('placeholder') || @el.data('loading') || @_t('loading'))
       .prependTo @select
     @list = @select.find ".select-list"
 
@@ -274,7 +274,6 @@ class Select extends SimpleModule
 
     return unless items.length > 0
     @list.find(".loading, .select-item").remove()
-    @input.attr("placeholder", @el.data("placeholder") || @opts.placeholder)
 
     for item in items
       $itemEl = $(Select._tpl.item).data(item)
