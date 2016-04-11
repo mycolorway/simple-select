@@ -162,7 +162,20 @@ describe 'Simple Select', ->
     select.destroy()
     expect(selectEl.data('select')).not.toBe(select)
 
-    
+  it "should set placeholder by setting data-placeholder", ->
+    hint = "some hint text"
+    selectEl.data("placeholder", hint)
+    selectEl.appendTo("body")
+    select = simple.select
+      el: $("#select-one")
+    expect(select.input.attr("placeholder")).toBe(hint)
 
-    
-
+  it "should override data-placeholder by setting placeholder in opt", ->
+    hint = "some hint text"
+    anotherHint = "another hint text"
+    selectEl.data("placeholder", hint)
+    selectEl.appendTo("body")
+    select = simple.select
+      el: $("#select-one")
+      placeholder: anotherHint
+    expect(select.input.attr("placeholder")).toBe(anotherHint)
