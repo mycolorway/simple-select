@@ -1,6 +1,6 @@
 {
   "name": "simple-select",
-  "version": "2.0.10",
+  "version": "2.0.11",
   "description": "a simple select plugin based on Simple Module",
   "main": "lib/select.js",
   "repository": {
