@@ -140,9 +140,6 @@ class Select extends SimpleModule
     @select.on "mousedown", (e) =>
       @input.focus()
 
-    @on "change", (e, content) =>
-      @_change(e, content)
-
 
   _keydown: (e) ->
     return unless @items and @items.length
