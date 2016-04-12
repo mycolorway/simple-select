@@ -278,13 +278,6 @@ class Select extends SimpleModule
     @_focused = true
 
 
-  autoresizeInput: () ->
-    setTimeout () =>
-      @input.css("height", 0)
-      @input.css("height", parseInt(@input.get(0).scrollHeight) + parseInt(@input.css("border-top-width")) + parseInt(@input.css("border-bottom-width")))
-    , 0
-
-
   setItems: (items) ->
     return unless $.isArray(items)
     @items = items
@@ -340,6 +333,13 @@ class Select extends SimpleModule
     @el.val ''
     @trigger "clear"
     @autoresizeInput()
+
+
+  autoresizeInput: () ->
+    setTimeout () =>
+      @input.css("height", 0)
+      @input.css("height", parseInt(@input.get(0).scrollHeight) + parseInt(@input.css("border-top-width")) + parseInt(@input.css("border-bottom-width")))
+    , 0
 
 
   disable: ->
