@@ -19,7 +19,7 @@ class Select extends SimpleModule
 
   @_tpl:
     input: """
-      <input type="text" class="select-result" autocomplete="off">
+      <textarea rows=1 type="text" class="select-result" autocomplete="off"></textarea>
     """
 
     item: """
@@ -37,6 +37,7 @@ class Select extends SimpleModule
     @opts.el.data("select")?.destroy()
     @_render()
     @_bind()
+    @trigger "change", [@input.val()]
 
 
   _render: ->
@@ -94,6 +95,7 @@ class Select extends SimpleModule
     else
       @input.addClass "expanded"
       @list.show() if @items.length > 0
+      @list.css("top", @input.outerHeight() + 4)
       @_scrollToSelected() if @_selectedIndex > -1
 
 
@@ -134,6 +136,12 @@ class Select extends SimpleModule
       @_blur(e)
     .on "focus.select", (e) =>
       @_focus(e)
+
+    @select.on "mousedown", (e) =>
+      @input.focus()
+
+    @on "change", (e, content) =>
+      @_change(e, content)
 
 
   _keydown: (e) ->
@@ -188,10 +196,12 @@ class Select extends SimpleModule
     else if e.which is 8  # backspace
       @clearSelection() if @select.hasClass "selected"
       @_expand() unless @input.hasClass "expanded"
+    @trigger "change", [@input.val()]
 
 
   _keyup: (e) ->
     return false if $.inArray(e.which, [13, 40, 38, 9, 27]) > -1
+    @trigger "change", [@input.val()]
 
     if @_keydownTimer
       clearTimeout(@_keydownTimer)
@@ -268,6 +278,13 @@ class Select extends SimpleModule
     @_focused = true
 
 
+  _change: (e, content) ->
+    setTimeout () =>
+      @input.css("height", 0)
+      @input.css("height", parseInt(@input.get(0).scrollHeight) + parseInt(@input.css("border-top-width")) + parseInt(@input.css("border-bottom-width")))
+    , 0
+
+
   setItems: (items) ->
     return unless $.isArray(items)
     @items = items
@@ -306,6 +323,7 @@ class Select extends SimpleModule
       @_selectedIndex = index
       @el.val item._value
       @trigger "select", [item]
+      @trigger "change", [@input.val()]
 
     return @items[@_selectedIndex] if @_selectedIndex > -1
 
@@ -321,6 +339,7 @@ class Select extends SimpleModule
     @_selectedIndex = -1
     @el.val ''
     @trigger "clear"
+    @trigger "change", [@input.val()]
 
 
   disable: ->
