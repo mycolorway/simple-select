@@ -19,7 +19,7 @@ class Select extends SimpleModule
 
   @_tpl:
     input: """
-      <input type="text" class="select-result" autocomplete="off">
+      <div contenteditable=true class="select-result"></div>
     """
 
     item: """
@@ -37,6 +37,7 @@ class Select extends SimpleModule
     @opts.el.data("select")?.destroy()
     @_render()
     @_bind()
+    @trigger "change", [@input.html()]
 
 
   _render: ->
@@ -62,6 +63,7 @@ class Select extends SimpleModule
       .insertBefore @el
     @input = $(Select._tpl.input)
       .attr("placeholder", @opts.placeholder || @el.data('placeholder') || "")
+      .addClass("placeholder")
       .prependTo @select
     @list = @select.find ".select-list"
 
@@ -94,6 +96,7 @@ class Select extends SimpleModule
     else
       @input.addClass "expanded"
       @list.show() if @items.length > 0
+      @list.css('top', @input.outerHeight() + 5)
       @_scrollToSelected() if @_selectedIndex > -1
 
 
@@ -135,8 +138,12 @@ class Select extends SimpleModule
     .on "focus.select", (e) =>
       @_focus(e)
 
+    @.on "change", (e, content) =>
+      @_change(e, content)
+
 
   _keydown: (e) ->
+    @input.removeClass 'placeholder'
     return unless @items and @items.length
     return if @triggerHandler(e) is false
 
@@ -192,6 +199,7 @@ class Select extends SimpleModule
 
   _keyup: (e) ->
     return false if $.inArray(e.which, [13, 40, 38, 9, 27]) > -1
+    @trigger "change", [@input.html()]
 
     if @_keydownTimer
       clearTimeout(@_keydownTimer)
@@ -268,6 +276,12 @@ class Select extends SimpleModule
     @_focused = true
 
 
+  _change: (e, content) ->
+    @input.val(content)
+    @input.removeClass 'placeholder' if content && @input.hasClass 'placeholder'
+    @input.addClass 'placeholder' if !content && !@input.hasClass 'placeholder'
+
+
   setItems: (items) ->
     return unless $.isArray(items)
     @items = items
@@ -296,7 +310,7 @@ class Select extends SimpleModule
 
       item = @items[index]
       @select.addClass "selected"
-      @input.val item.label
+      @input.html item.label
         .removeClass "expanded error"
       @list.hide()
         .find ".select-item"
@@ -306,12 +320,13 @@ class Select extends SimpleModule
       @_selectedIndex = index
       @el.val item._value
       @trigger "select", [item]
+      @trigger "change", [@input.html()]
 
     return @items[@_selectedIndex] if @_selectedIndex > -1
 
 
   clearSelection: ->
-    @input.val("").removeClass("expanded error")
+    @input.html("").removeClass("expanded error")
     @select.removeClass("selected")
     @list.hide()
       .find(".select-item")
@@ -321,6 +336,7 @@ class Select extends SimpleModule
     @_selectedIndex = -1
     @el.val ''
     @trigger "clear"
+    @trigger "change", [@input.html()]
 
 
   disable: ->
