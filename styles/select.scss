@@ -6,7 +6,12 @@
     width: 100%;
     box-sizing: border-box;
     padding: 4px;
+    padding-right: 28px;
     border: 1px solid #dfdfdf;
+    outline: none;
+    word-wrap: break-word;
+    -moz-user-modify: read-write;
+    -webkit-user-modify: read-write;
   }
 
   .placeholder {

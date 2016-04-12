@@ -138,6 +138,9 @@ class Select extends SimpleModule
     .on "focus.select", (e) =>
       @_focus(e)
 
+    @select.on "click", (e) =>
+      @input.focus()
+
     @.on "change", (e, content) =>
       @_change(e, content)
 
