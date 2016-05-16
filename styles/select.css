@@ -78,6 +78,9 @@
   color: #666666;
   border-bottom: 1px solid #dfdfdf;
   cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .simple-select .select-list .select-item:first-child {
   -webkit-border-radius: 4px 4px 0 0;
@@ -101,12 +104,10 @@
   float: right;
   color: #aaa;
 }
-.simple-select.multi .select-result {
+.simple-select.multiline .select-result {
   resize: none;
   overflow: hidden;
 }
-.simple-select.single .select-list .select-item {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+.simple-select.multiline .select-list .select-item {
+  white-space: normal;
 }

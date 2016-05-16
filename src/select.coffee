@@ -6,7 +6,7 @@ class Select extends SimpleModule
     onItemRender: $.noop
     placeholder: ""
     allowInput: false
-    multiInput: true
+    multiline: true
 
   @i18n:
     "zh-CN":
@@ -19,11 +19,11 @@ class Select extends SimpleModule
       loading: "Loading..."
 
   @_tpl:
-    multiInput: """
+    textarea: """
       <textarea rows=1 type="text" class="select-result" autocomplete="off"></textarea>
     """
 
-    singleInput: """
+    input: """
       <input type="text" class="select-result" autocomplete="off">
     """
 
@@ -66,12 +66,11 @@ class Select extends SimpleModule
       .data("select", @)
       .addClass(@opts.cls)
       .insertBefore @el
-    if @opts.multiInput
-      @select.addClass('multi')
-      inputTpl = Select._tpl.multiInput
+    if @opts.multiline
+      @select.addClass('multiline')
+      inputTpl = Select._tpl.textarea
     else
-      @select.addClass('single')
-      inputTpl = Select._tpl.singleInput
+      inputTpl = Select._tpl.input
 
     @input = $(inputTpl)
       .attr("placeholder", @opts.placeholder || @el.data('placeholder') || "")
@@ -345,7 +344,7 @@ class Select extends SimpleModule
 
 
   autoresizeInput: () ->
-    return unless @opts.multiInput
+    return unless @opts.multiline
     setTimeout () =>
       @input.css("height", 0)
       @input.css("height", parseInt(@input.get(0).scrollHeight) + parseInt(@input.css("border-top-width")) + parseInt(@input.css("border-bottom-width")))

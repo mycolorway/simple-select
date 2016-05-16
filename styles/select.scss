@@ -94,6 +94,9 @@
       color: #666666;
       border-bottom: 1px solid #dfdfdf;
       cursor: pointer;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
 
       &:first-child {
         -webkit-border-radius: 4px 4px 0 0;
@@ -124,19 +127,14 @@
     }
   }
 
-  &.multi {
+  &.multiline {
     .select-result {
       resize: none;
       overflow: hidden;
     }
-  }
-
-  &.single {
     .select-list {
       .select-item {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+        white-space: normal;
       }
     }
   }
