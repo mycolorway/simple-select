@@ -37,7 +37,8 @@ simple.select({
     el: $('select'),           // * 必须
     cls: "",                   // 额外的 class
     onItemRender: $.noop,      // 渲染列表每个元素后调用的函数
-    placeholder: ""            // input 元素的 placeholder 属性
+    placeholder: "",           // input 元素的 placeholder 属性
+    multiline: false          // input 元素是否可换行，默认为true
 });
 ```
 
