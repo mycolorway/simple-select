@@ -78,8 +78,7 @@ class Select extends SimpleModule
     @list = @select.find ".select-list"
 
     @requireSelect = true
-
-    items = @el.find("option").map (i, option) =>
+    @items = @el.find("option").map (i, option) =>
       $option = $(option)
       value = $option.attr 'value'
       label = $option.text().trim()
@@ -94,10 +93,8 @@ class Select extends SimpleModule
       }, $option.data())
     .get()
 
-    if @requireSelect
-      @select.addClass('require-select')
-
-    @setItems items
+    @generateList()
+    @select.toggleClass 'require-select', @requireSelect
 
   _expand: (expand) ->
     if expand is false
@@ -286,14 +283,9 @@ class Select extends SimpleModule
     @_focused = true
 
 
-  setItems: (items) ->
-    return unless $.isArray(items)
-    @items = items
-
-    return unless items.length > 0
-    @list.find(".loading, .select-item").remove()
-
-    for item in items
+  generateList: ->
+    @list.empty()
+    for item in @items
       $itemEl = $(Select._tpl.item).data(item)
       $itemEl.find(".label span").text(item.label)
       $itemEl.find(".hint").text(item.hint)
@@ -301,10 +293,25 @@ class Select extends SimpleModule
       @list.append $itemEl
       @opts.onItemRender.call(@, $itemEl, item)  if $.isFunction @opts.onItemRender
 
-    for it, idx in items
+    for it, idx in @items
       if it._value is @el.val()
         @selectItem idx
         break
+
+  setItems: (items, requireSelect = true) ->
+    @items = items
+    @clearSelection()
+    @list.empty()
+    @el.empty()
+
+    if $.isArray(items) && items.length > 0
+      @requireSelect = requireSelect
+      @select.toggleClass 'require-select', @requireSelect
+      @el.prepend('<option></option>') unless @requireSelect
+      for item in items
+        @el.append("<option value=\"#{item._value}\">#{item.label}</option>")
+
+      @generateList()
 
   selectItem: (index) ->
     return unless @items
