@@ -86,7 +86,7 @@
       color: #bbbbbb;
     }
 
-    .select-item {
+    .select-item, .select-group {
       display: block;
       font-size: 12px;
       line-height: 24px;
@@ -123,6 +123,15 @@
       .hint {
         float: right;
         color: #aaa;
+      }
+    }
+
+    .select-group {
+      background: #f6f6f6;
+      color: #888888;
+      cursor: default;
+      &:hover {
+        background: #f6f6f6;
       }
     }
   }

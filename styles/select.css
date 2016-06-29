@@ -70,7 +70,7 @@
   line-height: 1;
   color: #bbbbbb;
 }
-.simple-select .select-list .select-item {
+.simple-select .select-list .select-item, .simple-select .select-list .select-group {
   display: block;
   font-size: 12px;
   line-height: 24px;
@@ -82,27 +82,35 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.simple-select .select-list .select-item:first-child {
+.simple-select .select-list .select-item:first-child, .simple-select .select-list .select-group:first-child {
   -webkit-border-radius: 4px 4px 0 0;
   -moz-border-radius: 4px 4px 0 0;
   border-radius: 4px 4px 0 0;
 }
-.simple-select .select-list .select-item:last-child {
+.simple-select .select-list .select-item:last-child, .simple-select .select-list .select-group:last-child {
   border-bottom: none;
   -webkit-border-radius: 0 0 4px 4px;
   -moz-border-radius: 0 0 4px 4px;
   border-radius: 0 0 4px 4px;
 }
-.simple-select .select-list .select-item:hover, .simple-select .select-list .select-item.selected {
+.simple-select .select-list .select-item:hover, .simple-select .select-list .select-item.selected, .simple-select .select-list .select-group:hover, .simple-select .select-list .select-group.selected {
   background: #efefef;
 }
-.simple-select .select-list .select-item .label {
+.simple-select .select-list .select-item .label, .simple-select .select-list .select-group .label {
   color: #666666;
   text-decoration: none;
 }
-.simple-select .select-list .select-item .hint {
+.simple-select .select-list .select-item .hint, .simple-select .select-list .select-group .hint {
   float: right;
   color: #aaa;
+}
+.simple-select .select-list .select-group {
+  background: #f6f6f6;
+  color: #888888;
+  cursor: default;
+}
+.simple-select .select-list .select-group:hover {
+  background: #f6f6f6;
 }
 .simple-select.multiline .select-result {
   resize: none;

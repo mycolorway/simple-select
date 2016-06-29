@@ -69,6 +69,32 @@
             select.on('select', function(e, item) {
                 select.el.after("<p>" + item.label + "</p>");
             });
+
+            var select = simple.select({
+                el: $('#select-four'),
+                placeholder: 'type sth...',
+            });
+
+            select.setItems({
+              "SwedishCars": [{
+                label: "Volvo",
+                key: "volvo",
+                id: "1"
+              }, {
+                label: "saab",
+                key: "Saab",
+                id: "1"
+              }],
+              "GermanCars": [{
+                label: "Mercedes",
+                key: "mercedes",
+                id: "1"
+              }, {
+                label: "Audi",
+                key: "audi",
+                id: "1"
+              }]
+            });
         });
     </script>
 
@@ -78,9 +104,14 @@
         <div class="demo-one">
             <h3>Demo one: multiline as false</h3>
             <select id="select-one">
-                <option value="0" data-hint="#1" data-key="George Washington">George Washington</option>
-                <option value="1" data-hint="#2" data-key="John Adams">John Adams</option>
-                <option value="2" data-hint="#3" data-key="Thomas Jefferson">Thomas Jefferson Juan Mata</option>
+              <optgroup label="Swedish Cars">
+                <option value="volvo">Volvo</option>
+                <option value="saab">Saab</option>
+              </optgroup>
+              <optgroup label="German Cars">
+                <option value="mercedes">Mercedes</option>
+                <option value="audi">Audi</option>
+              </optgroup>
             </select>
         </div>
 
@@ -98,6 +129,12 @@
                 <option value="0" data-key="George Washington">George Washington</option>
                 <option value="1" data-key="John Adams">John Adams</option>
                 <option value="2" data-key="Thomas Jefferson">Thomas Jefferson Thomas Jefferson Thomas Jefferson</option>
+            </select>
+        </div>
+
+        <div class="demo-four">
+            <h3>Demo Four: call setItems with object</h3>
+            <select id="select-four">
             </select>
         </div>
     </div>
