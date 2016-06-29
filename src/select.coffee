@@ -34,6 +34,11 @@ class Select extends SimpleModule
       </div>
     """
 
+    group: """
+      <div class="select-group">
+      </div>
+    """
+
   _init: ->
     unless @opts.el
       throw "simple select: option el is required"
@@ -78,23 +83,40 @@ class Select extends SimpleModule
     @list = @select.find ".select-list"
 
     @requireSelect = true
-    @items = @el.find("option").map (i, option) =>
-      $option = $(option)
-      value = $option.attr 'value'
-      label = $option.text().trim()
 
-      unless value
-        @requireSelect = false
-        return
-
-      $.extend({
-        label: label,
-        _value: value
-      }, $option.data())
-    .get()
-
+    @_setGroupsItems()
     @generateList()
     @select.toggleClass 'require-select', @requireSelect
+
+  _setGroupsItems: () ->
+    @groups = false
+
+    @items = @el.find("option").map (i, option) =>
+      $option = $(option)
+      $group = $option.parent('optgroup')
+      item = @_item $option
+      if $group.length isnt 0
+        @groups = {} if @groups is false
+        groupLabel = $group.attr('label')
+        @groups[groupLabel] = [] unless $.isArray(@groups[groupLabel])
+        @groups[groupLabel].push(item)
+      item
+    .get()
+
+
+  _item: ($option) ->
+    value = $option.attr 'value'
+    label = $option.text().trim()
+
+    unless value
+      @requireSelect = false
+      return
+
+    $.extend({
+      label: label,
+      _value: value
+    }, $option.data())
+
 
   _expand: (expand) ->
     if expand is false
@@ -285,32 +307,55 @@ class Select extends SimpleModule
 
   generateList: ->
     @list.empty()
-    for item in @items
-      $itemEl = $(Select._tpl.item).data(item)
-      $itemEl.find(".label span").text(item.label)
-      $itemEl.find(".hint").text(item.hint)
-
-      @list.append $itemEl
-      @opts.onItemRender.call(@, $itemEl, item)  if $.isFunction @opts.onItemRender
+    if @groups
+      $.each @groups, (groupLabel, items) =>
+        $groupEl = $(Select._tpl.group)
+        $groupEl.text(groupLabel)
+        @list.append($groupEl)
+        for item in items
+          $itemEl = @_itemEl(item)
+          @list.append($itemEl)
+          @opts.onItemRender.call(@, $itemEl, item)  if $.isFunction @opts.onItemRender
+    else
+      for item in @items
+        $itemEl = @_itemEl(item)
+        @list.append $itemEl
+        @opts.onItemRender.call(@, $itemEl, item)  if $.isFunction @opts.onItemRender
 
     for it, idx in @items
       if it._value is @el.val()
         @selectItem idx
         break
 
+  _itemEl: (item) ->
+    $itemEl = $(Select._tpl.item).data(item)
+    $itemEl.find(".label span").text(item.label)
+    $itemEl.find(".hint").text(item.hint)
+    $itemEl
+
   setItems: (items, requireSelect = true) ->
-    @items = items
+    @items = []
     @clearSelection()
     @list.empty()
     @el.empty()
 
+    @requireSelect = requireSelect
+    @select.toggleClass 'require-select', @requireSelect
+    @el.prepend('<option></option>') unless @requireSelect
+
     if $.isArray(items) && items.length > 0
-      @requireSelect = requireSelect
-      @select.toggleClass 'require-select', @requireSelect
-      @el.prepend('<option></option>') unless @requireSelect
       for item in items
         @el.append("<option value=\"#{item._value}\">#{item.label}</option>")
+      @_setGroupsItems()
+      @generateList()
 
+    if $.type(items) is 'object'
+      $.each items, (groupLabel, items) =>
+        $group = $("<optgroup label=#{groupLabel}></optgroup>")
+        for item in items
+          $group.append("<option value=\"#{item._value}\">#{item.label}</option>")
+        @el.append($group)
+      @_setGroupsItems()
       @generateList()
 
   selectItem: (index) ->
