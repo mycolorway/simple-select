@@ -1,26 +1,28 @@
+$height: 24px;
+
 .simple-select {
   position: relative;
-  width: 155px;
 
   .select-result {
+    display: block;
     width: 100%;
-    height: 24px;
+    height: $height;
     box-sizing: border-box;
     padding: 4px;
-    padding-right: 24px;
+    padding-right: $height;
   }
 
   .link-clear, .link-expand {
     display: block;
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
+    width: $height;
+    height: $height;
+    line-height: $height;
     text-align: center;
-    font-size: 13px;
+    font-size: 12px;
     color: #999999;
     position: absolute;
-    top: 1px;
-    right: 1px;
+    top: 0;
+    right: 0;
     cursor: pointer;
 
     &:hover {
@@ -40,7 +42,7 @@
     display: none;
   }
 
-  &.selected {
+  &.allow-empty.selected {
     .link-expand {
       display: none;
     }
@@ -48,42 +50,30 @@
     .link-clear {
       display: block;
     }
-
-  }
-
-  &.require-select {
-    .link-expand {
-      display: block!important;
-    }
-
-    .link-clear {
-      display: none!important;
-    }
   }
 
   .select-list {
     display: none;
     width: 100%;
-    max-height: 199px;
+    max-height: 200px;
     overflow-x: hidden;
     overflow-y: auto;
     background: #ffffff;
     border: 1px solid #cccccc;
+    box-sizing: border-box;
     position: absolute;
-    top: 30px;
-    z-index: 10;
-    -webkit-border-radius: 4px;
-       -moz-border-radius: 4px;
-            border-radius: 4px;
-    -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-       -moz-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    top: 0;
+    left: 0;
+    z-index: 1;
+    border-radius: 4px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
 
-    .loading {
+    .loading,
+    .no-results {
       padding: 8px;
       font-size: 12px;
       line-height: 1;
-      color: #bbbbbb;
+      color: #999999;
     }
 
     .select-item, .select-group {
@@ -128,7 +118,8 @@
 
     .select-group {
       background: #f6f6f6;
-      color: #888888;
+      color: #000000;
+      font-weight: bold;
       cursor: default;
       &:hover {
         background: #f6f6f6;
@@ -136,7 +127,11 @@
     }
   }
 
-  &.multiline {
+  &.expanded .select-list {
+    display: block;
+  }
+
+  &.word-wrap {
     .select-result {
       resize: none;
       overflow: hidden;

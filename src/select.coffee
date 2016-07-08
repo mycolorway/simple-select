@@ -2,29 +2,30 @@ class Select extends SimpleModule
 
   opts:
     el: null
+    url: null
     cls: ""
     onItemRender: $.noop
     placeholder: ""
     allowInput: false
-    multiline: true
+    wordWrap: false
+    locales: null
 
-  @i18n:
-    "zh-CN":
-      all_options: "所有选项"
-      clear_selection: "清除选择"
-      loading: "加载中..."
-    "en":
-      all_options: "All options"
-      clear_selection: "Clear Selection"
-      loading: "Loading..."
+  @locales:
+    loadingMessage: 'Loading...'
+    no_results: 'No results found'
 
   @_tpl:
-    textarea: """
-      <textarea rows=1 type="text" class="select-result" autocomplete="off"></textarea>
-    """
-
-    input: """
-      <input type="text" class="select-result" autocomplete="off">
+    wrapper: """
+      <div class="simple-select">
+        <span class="link-expand">
+          <i class="icon-caret-down"><span>&#9662;</span></i>
+        </span>
+        <span class="link-clear">
+          <i class="icon-delete"><span>&#10005;</span></i>
+        </span>
+        <div class="select-list">
+        </div>
+      </div>
     """
 
     item: """
@@ -34,390 +35,374 @@ class Select extends SimpleModule
       </div>
     """
 
-    group: """
-      <div class="select-group">
-      </div>
-    """
-
   _init: ->
-    unless @opts.el
+    @el = $(@opts.el)
+    unless @el.length > 0
       throw "simple select: option el is required"
       return
 
-    @opts.el.data("select")?.destroy()
+    @el.data("simpleSelect")?.destroy()
+    @locales = @opts.locales || Select.locales
+
     @_render()
     @_bind()
-    @autoresizeInput()
-
 
   _render: ->
-    Select._tpl.select = """
-      <div class="simple-select">
-        <span class="link-expand" title="#{@_t('all_options')}">
-          <i class="icon-caret-down"><span>&#9662;</span></i>
-        </span>
-        <span class="link-clear" title="#{@_t('clear_selection')}">
-          <i class="icon-delete"><span>&#10005;</span></i>
-        </span>
-        <div class="select-list">
-          <div class="loading">#{@_t('loading')}</div>
-        </div>
-      </div>
-    """
-
-    @el = $(@opts.el).hide()
-    @el.data("select", @)
-    @select = $(Select._tpl.select)
-      .data("select", @)
+    @el.hide()
+      .data("simpleSelect", @)
+    @wrapper = $(Select._tpl.wrapper)
+      .data("simpleSelect", @)
       .addClass(@opts.cls)
       .insertBefore @el
-    if @opts.multiline
-      @select.addClass('multiline')
-      inputTpl = Select._tpl.textarea
+
+    if @opts.allowInput
+      @input = $ @opts.allowInput
+    else if @opts.wordWrap
+      @wrapper.addClass('word-wrap')
+      @input = $ '<textarea rows="1">'
     else
-      inputTpl = Select._tpl.input
+      @input = $ '<input type="text">'
 
-    @input = $(inputTpl)
-      .attr("placeholder", @opts.placeholder || @el.data('placeholder') || "")
-      .prependTo @select
-    @list = @select.find ".select-list"
+    @input.addClass 'select-result'
+      .attr 'autocomplete', 'off'
+      .prependTo @wrapper
+    @list = @wrapper.find ".select-list"
 
-    @requireSelect = true
-
-    @_setGroupsItems()
-    @generateList()
-    @select.toggleClass 'require-select', @requireSelect
-
-  _setGroupsItems: () ->
-    @groups = false
-
-    @items = @el.find("option").map (i, option) =>
-      $option = $(option)
-      $group = $option.parent('optgroup')
-      item = @_item $option
-      if $group.length isnt 0
-        @groups = {} if @groups is false
-        groupLabel = $group.attr('label')
-        @groups[groupLabel] = [] unless $.isArray(@groups[groupLabel])
-        @groups[groupLabel].push(item)
-      item
-    .get()
-
-
-  _item: ($option) ->
-    value = $option.attr 'value'
-    label = $option.text().trim()
-
-    unless value
-      @requireSelect = false
-      return
-
-    $.extend({
-      label: label,
-      _value: value
-    }, $option.data())
-
-
-  _expand: (expand) ->
-    if expand is false
-      @input.removeClass "expanded"
-      @list.hide()
+    if @opts.url
+      @wrapper.addClass 'allow-empty'
     else
-      @input.addClass "expanded"
-      @list.show() if @items.length > 0
-      @list.css("top", @input.outerHeight() + 4)
-      @_scrollToSelected() if @_selectedIndex > -1
+      @_initItems()
+      @selectItem @el.val()
 
+    if @opts.wordWrap
+      @_autoresizeInput()
+    else
+      @_positionList()
 
-  _scrollToSelected: ->
-    return if @_selectedIndex < 0
-    $selectedEl = @list.find(".select-item").eq @_selectedIndex
-    @list.scrollTop $selectedEl.position().top
+  _initItems: ->
+    getItems = ($options) ->
+      items = []
+      $options.each (i, option) =>
+        $option = $ option
+        value = $option.val()
+        return unless value
+        attrs = $option.data()
+        unless $.isEmptyObject(attrs)
+          newAttrs = {}
+          $.each Object.keys(attrs), (i, key) =>
+            newAttrs["data-#{key}"] = attrs[key]
+          attrs = newAttrs
+        items.push [$option.text(), value, attrs]
+      items
 
+    if ($groups = @el.find('optgroup')).length > 0
+      @items = {}
+      $groups.each (i, group) =>
+        $group = $ group
+        @items[$group.attr('label')] = getItems $group.find('option')
+    else
+      @items = getItems @el.find('option')
+
+    @_generateList @items
+    @_checkBlankOption()
+
+  setItems: (items) ->
+    renderOptions = ($container, items) ->
+      $.each items, (i, item) =>
+        $option = $ '<option>', $.extend
+          text: item[0]
+          value: item[1]
+        , if item.length > 2 then item[2] else null
+        $container.append $option
+
+    @items = items
+    @el.empty()
+
+    if $.isArray(items)
+      renderOptions @el, items
+    else if $.isPlainObject(items)
+      $.each items, (groupName, groupItems) =>
+        $group = $ "<optgroup>",
+          label: groupName
+        renderOptions $group, groupItems
+        @el.append $group
+
+    @_generateList @items
+    @_checkBlankOption()
+
+  _checkBlankOption: ->
+    $blankOption = @el.find('option:not([value]), option[value=""]')
+    @_allowEmpty = $blankOption.length > 0
+    @wrapper.toggleClass 'allow-empty', @_allowEmpty
+    placeholder = (@_allowEmpty && $blankOption.text()) || @opts.placeholder
+    @input.attr("placeholder", placeholder) if placeholder
+
+  _generateList: (items) ->
+    itemEl = (item) ->
+      $itemEl = $(Select._tpl.item).data('item', item)
+      $itemEl.find(".label span").text(item[0])
+      $itemEl.attr 'data-value', item[1]
+      if item.length > 2 && (hint = item[2]['data-hint'])
+        $itemEl.find(".hint").text(hint)
+      $itemEl
+
+    @list.empty()
+    children = []
+    if $.isPlainObject(items) && !$.isEmptyObject(items)
+      $.each items, (groupName, groupItems) =>
+        $groupEl = $ '<div class="select-group">'
+        $groupEl.text(groupName)
+        children.push $groupEl[0]
+        $.each groupItems, (i, item) =>
+          $itemEl = itemEl item
+          children.push $itemEl[0]
+          @opts.onItemRender.call(@, $itemEl, item) if $.isFunction @opts.onItemRender
+    else if $.isArray(items) && items.length > 0
+      $.each items, (i, item) =>
+        $itemEl = itemEl item
+        @opts.onItemRender.call(@, $itemEl, item) if $.isFunction @opts.onItemRender
+        children.push $itemEl[0]
+    else
+      $noResults = $('<div class="no-results"></div>')
+        .text @locales.no_results
+      children.push $noResults[0]
+
+    @list.append children
+
+  selectItem: ($item) ->
+    return unless $item
+    unless typeof $item == 'object'
+      $item = @list.find(".select-item[data-value='#{$item}']")
+    return unless $item.length > 0
+    item = $item.data 'item'
+
+    if @opts.url
+      @setValue item[0]
+    else
+      @input.val item[0]
+      @_generateList @items
+
+    @wrapper.addClass "selected"
+    @_toggleList false
+    @el.val item[1]
+    @triggerHandler "select", [item, $item]
+    @_autoresizeInput()
+    item
+
+  setValue: (value) ->
+    @input.val value
+    @_input()
+
+  _toggleList: (expand = null) ->
+    if expand == null
+      expand = !@wrapper.hasClass('expanded')
+
+    if expand
+      @wrapper.addClass "expanded"
+      @_scrollToItem()
+    else
+      @wrapper.removeClass "expanded"
+
+  _scrollToItem: ($item) ->
+    $item ||= @list.find('.select-item.selected')
+    if $item.length > 0
+      @list.scrollTop $item.position().top
 
   _bind: ->
-    @select.find(".link-clear").on "mousedown", (e) =>
-      @clearSelection()
-      return false
+    @wrapper.find(".link-clear").on "mousedown", (e) =>
+      @clear()
+      false
 
-    @select.find(".link-expand").on "mousedown", (e) =>
-      @_expand !@input.hasClass("expanded")
+    @wrapper.find(".link-expand").on "mousedown", (e) =>
+      @_toggleList()
       @input.focus() unless @_focused
-      return false
+      false
 
-    @list.on "mousedown", (e) =>
-      if window.navigator.userAgent.toLowerCase().indexOf('msie') > -1
-        @_scrollMousedown = true
-        setTimeout =>
-          @input.focus()
-        , 0
-      return false
-    .on "mousedown", ".select-item", (e) =>
-      index = @list.find(".select-item").index $(e.currentTarget)
-      @selectItem index
+    @list.on "mousedown", ".select-item", (e) =>
+      $item = $ e.currentTarget
+      @selectItem $item
       @input.blur()
-      return false
+      false
 
-    @input.on "keydown.select", (e) =>
+    @input.on "keydown.simple-select", (e) =>
       @_keydown(e)
-    .on "keyup.select", (e) =>
-      @_keyup(e)
-    .on "blur.select", (e) =>
+    .on "input.simple-select", (e) =>
+      if @_inputTimer
+        clearTimeout @_inputTimer
+        @_inputTimer = null
+      setTimeout =>
+        @_input(e)
+      , 100
+    .on "blur.simple-select", (e) =>
       @_blur(e)
-    .on "focus.select", (e) =>
+    .on "focus.simple-select", (e) =>
       @_focus(e)
 
-    @select.on "mousedown", (e) =>
-      @input.focus()
+  _validateInput: ->
+    return if @wrapper.hasClass("selected")
 
+    value = $.trim @input.val()
+    if @opts.allowInput
+      @el.val ''
+    else if value
+      $item = @list.find(".select-item[data-value='#{value}']")
+      $item = @list.find('.select-item:first') unless $item.length > 0
+
+      if $item.length > 0
+        @selectItem $item
+      else
+        @setValue ''
 
   _keydown: (e) ->
-    return unless @items and @items.length
-    return if @triggerHandler(e) is false
-
-    if e.which is 40 or e.which is 38  # up and down
-      unless @input.hasClass "expanded"
-        @_expand()
-        $itemEls = @list.find(".select-item").show()
-        $itemEls.first().addClass("selected") if @_selectedIndex < 0
-
-      else
-        $selectedEl = @list.find ".select-item.selected"
-        unless $selectedEl.length
-          @list.find(".select-item:first").addClass "selected"
-          return
-
-        if e.which is 38
-          $prevEl = $selectedEl.prevAll(".select-item:visible:first")
-          if $prevEl.length
-            $selectedEl.removeClass "selected"
-            $prevEl.addClass "selected"
-        else if e.which is 40
-          $nextEl = $selectedEl.nextAll(".select-item:visible:first")
-          if $nextEl.length
-            $selectedEl.removeClass "selected"
-            $nextEl.addClass "selected"
-
-    else if e.which is 13  # enter
+    if e.which == 40 or e.which == 38  # up and down
       e.preventDefault()
-      if @input.hasClass "expanded"
+      return if !@wrapper.hasClass('expanded') || @list.hasClass('empty')
+
+      $selectedEl = @list.find ".select-item.selected"
+      unless $selectedEl.length > 0
+        @list.find(".select-item:first").addClass "selected"
+        return
+
+      if e.which == 38
+        $prevEl = $selectedEl.prevAll(".select-item:first")
+        if $prevEl.length
+          $selectedEl.removeClass "selected"
+          $prevEl.addClass "selected"
+      else if e.which == 40
+        $nextEl = $selectedEl.nextAll(".select-item:first")
+        if $nextEl.length
+          $selectedEl.removeClass "selected"
+          $nextEl.addClass "selected"
+
+      return
+
+    else if e.which == 13  # enter
+      e.preventDefault()
+      if @wrapper.hasClass('expanded')
         $selectedEl = @list.find ".select-item.selected"
-        if $selectedEl.length
-          index = @list.find(".select-item").index $selectedEl
-          @selectItem index
-          return false
-      else if @_selectedIndex > -1
-        @selectItem @_selectedIndex
+        if $selectedEl.length > 0
+          @selectItem $selectedEl
+        else
+          @_validateInput()
+          @_toggleList false
+      else
+        @el.closest('form').submit()
 
-      if @opts.allowInput
-        @input.blur()
-        return false
-
-      @clearSelection()
-      return false
-
-    else if e.which is 27  # esc
+    else if e.which == 27  # esc
       e.preventDefault()
       @input.blur()
 
-    else if e.which is 8  # backspace
-      @clearSelection() if @select.hasClass "selected"
-      @_expand() unless @input.hasClass "expanded"
-    @autoresizeInput()
+    else if e.which == 8 && @wrapper.hasClass "selected"  # backspace
+      e.preventDefault()
+      @setValue ''
 
+  _input: (e) ->
+    @_autoresizeInput()
 
-  _keyup: (e) ->
-    return false if $.inArray(e.which, [13, 40, 38, 9, 27]) > -1
-    @autoresizeInput()
-
-    if @_keydownTimer
-      clearTimeout(@_keydownTimer)
-      @_keydownTimer = null
-
-    $itemEls = @list.find ".select-item"
-    @_keydownTimer = setTimeout =>
-      @_expand() unless @input.hasClass "expanded"
-      if @select.hasClass "selected"
-        @select.removeClass "selected"
-
-      value = $.trim @input.val()
-      unless value
-        @list.show() if @items.length > 0
-        $itemEls.show().removeClass "selected"
-        return
-
-      try
-        re = new RegExp("(|\\s)" + value, "i")
-      catch e
-        re = new RegExp("", "i")
-
-      results = $itemEls.hide().removeClass("selected").filter ->
-        return re.test $(@).data("key")
-
-      if results.length
-        @list.show() if @items.length > 0
-        results.show().first().addClass "selected"
-      else
-        @list.hide()
-    , 0
-
-
-  _blur: (e) ->
-    if @_scrollMousedown
-      @_scrollMousedown = false
-      return false
-
-    @input.removeClass "expanded error"
-    @list.hide()
-      .find(".select-item")
-      .show()
-      .removeClass "selected"
+    @wrapper.removeClass "selected"
+    @el.val ''
 
     value = $.trim @input.val()
-    if !@select.hasClass("selected")
-      if @opts.allowInput
-        @el.val ''
-        @trigger 'select', [{label: value, _value: -1}]
-      else if value
-        matchIdx = -1
-        $.each @items, (i, item) ->
-          if (item.label is value)
-            matchIdx = i
-            return false
-        if matchIdx >= 0
-          @selectItem matchIdx
-        else
-          @selectItem Math.max(@_selectedIndex || -1, 0)
-      else if @requireSelect and @items.length > 0
-        @selectItem 0
-      else
-        @el.val ''
+    if @opts.url
+      @list.empty()
+      if value
+        $('<div class="loading"></div>')
+          .text @locales.loading
+          .appendTo @list
 
+        $.ajax
+          url: @opts.url
+          dataType: 'json'
+        .done (items) =>
+          items = [] unless $.isArray(items)
+          items = items.slice(0, 50) if items.length > 50
+          @setItems items
+          @list.find('.select-item:first').addClass 'selected'
+      else
+        @_toggleList false
+    else
+      @_toggleList(true) unless @wrapper.hasClass "expanded"
+
+      if value
+        filteredItems = @_filterItems value
+      else
+        filteredItems = @items
+
+      @_generateList filteredItems
+      @list.find('.select-item:first').addClass 'selected'
+
+  _filterItems: (value) ->
+    try
+      re = new RegExp("(|\\s)" + value, "i")
+    catch e
+      re = new RegExp("", "i")
+
+    isMatched = (item) ->
+      filterKey = (item.length > 2 && item[2]['data-key']) || item[0]
+      re.test filterKey
+
+    if $.isPlainObject(@items)
+      items = {}
+      $.each @items, (groupName, groupItems) =>
+        $.each groupItems, (i, item) =>
+          if isMatched item
+            items[groupName] ||= []
+            items[groupName].push item
+    else
+      items = []
+      $.each @items, (i, item) =>
+        items.push(item) if isMatched item
+
+    items
+
+  _blur: (e) ->
+    @_validateInput()
+    @_toggleList false
     @_focused = false
 
   _focus: (e) ->
-    @_expand()
-    if @_selectedIndex > -1
-      @list.find(".select-item").eq(@_selectedIndex).addClass("selected")
+    @_focused = true
+    return if @opts.url && !@input.val()
+    @_toggleList true
     setTimeout =>
       @input.select()
-    , 0
-    @_focused = true
 
+  clear: ->
+    @setValue ''
+    @_toggleList false
 
-  generateList: ->
-    @list.empty()
-    if @groups
-      $.each @groups, (groupLabel, items) =>
-        $groupEl = $(Select._tpl.group)
-        $groupEl.text(groupLabel)
-        @list.append($groupEl)
-        for item in items
-          $itemEl = @_itemEl(item)
-          @list.append($itemEl)
-          @opts.onItemRender.call(@, $itemEl, item)  if $.isFunction @opts.onItemRender
-    else
-      for item in @items
-        $itemEl = @_itemEl(item)
-        @list.append $itemEl
-        @opts.onItemRender.call(@, $itemEl, item)  if $.isFunction @opts.onItemRender
+    @triggerHandler "clear"
 
-    for it, idx in @items
-      if it._value is @el.val()
-        @selectItem idx
-        break
+  _autoresizeInput: ->
+    return unless @opts.wordWrap
+    @input.css("height", 0)
+    @input.css("height", parseInt(@input[0].scrollHeight) + parseInt(@input.css("border-top-width")) + parseInt(@input.css("border-bottom-width")))
+    @_positionList()
 
-  _itemEl: (item) ->
-    $itemEl = $(Select._tpl.item).data(item)
-    $itemEl.find(".label span").text(item.label)
-    $itemEl.find(".hint").text(item.hint)
-    $itemEl
-
-  setItems: (items, requireSelect = true) ->
-    @items = []
-    @clearSelection()
-    @list.empty()
-    @el.empty()
-
-    @requireSelect = requireSelect
-    @select.toggleClass 'require-select', @requireSelect
-    @el.prepend('<option></option>') unless @requireSelect
-
-    if $.isArray(items) && items.length > 0
-      for item in items
-        @el.append("<option value=\"#{item._value}\">#{item.label}</option>")
-      @_setGroupsItems()
-      @generateList()
-
-    if $.type(items) is 'object'
-      $.each items, (groupLabel, items) =>
-        $group = $("<optgroup label=#{groupLabel}></optgroup>")
-        for item in items
-          $group.append("<option value=\"#{item._value}\">#{item.label}</option>")
-        @el.append($group)
-      @_setGroupsItems()
-      @generateList()
-
-  selectItem: (index) ->
-    return unless @items
-
-    if $.isNumeric index
-      return if index < 0
-
-      item = @items[index]
-      @select.addClass "selected"
-      @input.val item.label
-        .removeClass "expanded error"
-      @list.hide()
-        .find ".select-item"
-        .eq index
-        .addClass "selected"
-
-      @_selectedIndex = index
-      @el.val item._value
-      @trigger "select", [item]
-      @autoresizeInput()
-
-    return @items[@_selectedIndex] if @_selectedIndex > -1
-
-
-  clearSelection: ->
-    @input.val("").removeClass("expanded error")
-    @select.removeClass("selected")
-    @list.hide()
-      .find(".select-item")
-      .show()
-      .removeClass "selected"
-
-    @_selectedIndex = -1
-    @el.val ''
-    @trigger "clear"
-    @autoresizeInput()
-
-
-  autoresizeInput: () ->
-    return unless @opts.multiline
-    setTimeout () =>
-      @input.css("height", 0)
-      @input.css("height", parseInt(@input.get(0).scrollHeight) + parseInt(@input.css("border-top-width")) + parseInt(@input.css("border-bottom-width")))
-    , 0
-
+  _positionList: ->
+    @list.css 'top', @input.outerHeight() + 2
 
   disable: ->
-    @input.prop "disabled", true
-    @select.find(".link-expand, .link-clear").hide()
-
+    @input.prop 'disabled', true
+    @el.prop 'disabled', true
+    @wrapper.addClass 'disabled'
 
   enable: ->
-    @input.prop "disabled", false
-    @select.find(".link-expand, .link-clear").attr("style", "")
-
+    @input.prop 'disabled', false
+    @el.prop 'disabled', false
+    @wrapper.removeClass 'disabled'
 
   destroy: ->
-    @select.remove()
-    @el.removeData 'select'
+    if @opts.allowInput
+      @input.off '.simple-select'
+        .removeClass 'select-result'
+        .removeAttr 'autocomplete placeholder'
+        .insertAfter @el
+    @wrapper.remove()
+    @el.removeData 'simpleSelect'
     @el.show()
-
 
 select = (opts) ->
   new Select(opts)
+
+select.locales = Select.locales

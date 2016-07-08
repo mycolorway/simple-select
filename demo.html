@@ -16,86 +16,61 @@
             margin: 50px auto;
         }
 
-        .demo-one {
-            margin-bottom: 250px;
-        }
-
-        input.error {
-          border: 1px solid #c21;
-        }
     </style>
 
     <script type="text/javascript" src="vendor/bower/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="vendor/bower/jquery-mousewheel/jquery.mousewheel.min.js"></script>
     <script type="text/javascript" src="vendor/bower/simple-module/lib/module.js"></script>
-    <script type="text/javascript" src="vendor/bower/simple-util/lib/util.js"></script>
     <script type="text/javascript" src="lib/select.js"></script>
     <script type="text/javascript">
-        $(function() {
-            simple.select({
-                el: $('#select-one'),
-                placeholder: 'type sth...',
-                multiline: false
-            });
+    $(function() {
+      simple.select({
+        el: $('#select-one'),
+        placeholder: 'type sth...',
+        allowInput: '#select-one-name',
+        multiline: false
+      });
 
-            simple.select({
-                el: $('#select-three'),
-                placeholder: 'type sth...'
-            });
+      simple.select({
+        el: $('#select-three'),
+        placeholder: 'type sth...'
+      });
 
 
-            var select = simple.select({
-                el: $('#select-two'),
-                placeholder: 'type sth...',
-                onItemRender: function($itemEl, item) {
-                    $itemEl.find('.label').prepend("<i class='fa fa-male'></i> ");
-                }
-            });
+      var select = simple.select({
+        el: $('#select-two'),
+        placeholder: 'type sth...',
+        onItemRender: function($itemEl, item) {
+          $itemEl.find('.label').prepend("<i class='fa fa-male'></i> ");
+        }
+      });
 
-            select.setItems([{
-              label: "张三",
-              key: "zhangsan zs 张三",
-              id: "1"
-            },{
-              label: "李四",
-              key: "lisi ls 李四",
-              id: "2"
-            },{
-              label: "王麻子",
-              key: "wangmazi wmz 王麻子",
-              id: "3"
-            }]);
+      select.setItems([
+        ["张三", "1", {"data-key": "zhangsan zs 张三"}],
+        ["李四", "2", {"data-key": "lisi ls 李四"}],
+        ["王麻子", "3", {"data-key": "wangmazi wmz 王麻子"}]
+      ]);
 
-            select.on('select', function(e, item) {
-                select.el.after("<p>" + item.label + "</p>");
-            });
+      select.on('select', function(e, item) {
+        select.el.after("<p>" + item[0] + "</p>");
+      });
 
-            var select = simple.select({
-                el: $('#select-four'),
-                placeholder: 'type sth...',
-            });
+      var select = simple.select({
+        el: $('#select-four'),
+        placeholder: 'type sth...',
+        wordWrap: true
+      });
 
-            select.setItems({
-              "SwedishCars": [{
-                label: "Volvo",
-                key: "volvo",
-                id: "1"
-              }, {
-                label: "saab",
-                key: "Saab",
-                id: "1"
-              }],
-              "GermanCars": [{
-                label: "Mercedes",
-                key: "mercedes",
-                id: "1"
-              }, {
-                label: "Audi",
-                key: "audi",
-                id: "1"
-              }]
-            });
-        });
+      select.setItems({
+        "SwedishCars": [
+          ["Volvo", "1", {"data-key": "volvo"}],
+          ["Saab", "2", {"data-key": "saab"}]
+        ],
+        "GermanCars": [
+          ["Mercedes", "3", {"data-key": "mercedes"}],
+          ["Audi", "4", {"data-key": "audi"}]
+        ]
+      });
+    });
     </script>
 
 </head>
@@ -113,6 +88,7 @@
                 <option value="audi">Audi</option>
               </optgroup>
             </select>
+            <input type="text" id="select-one-name">
         </div>
 
         <div class="demo-two">

@@ -1,133 +1,97 @@
 simple-select
 =============
 
-一个基于 [Simple Module](https://github.com/mycolorway/simple-module) 的快速选择组件。
+Autocomplete select component, supports html options data source, json data source or ajax remote data source.
 
-![Demo Gif](https://raw.githubusercontent.com/mycolorway/simple-select/master/demo.gif)
-
-### 如何使用
-
-#### 下载并引用
-
-通过 `bower install` 下载依赖的第三方库，然后在页面中引入这些文件：
+### Usage
 
 ```html
 <link rel="stylesheet" type="text/css" href="[style path]/select.css" />
 
 <script type="text/javascript" src="[script path]/jquery.min.js"></script>
-<script type="text/javascript" src="[script path]/jquery.mousewheel.min.js"></script>
 <script type="text/javascript" src="[script path]/module.js"></script>
-<!-- simple-util https://github.com/mycolorway/simple-util -->
-<script type="text/javascript" src="[script path]/util.js"></script>
 <script type="text/javascript" src="[script path]/select.js"></script>
-```
 
-#### 初始化配置
-
-在使用 simple-select 的 HTML 页面里应该有一个对应的 select 元素，例如：
-
-```html
-<select></select>
-```
-
-我们需要在这个页面的脚本里初始化 simple-select：
-
-```javascript
-simple.select({
-    el: $('select'),           // * 必须
-    cls: "",                   // 额外的 class
-    onItemRender: $.noop,      // 渲染列表每个元素后调用的函数
-    placeholder: "",           // input 元素的 placeholder 属性
-    multiline: false          // input 元素是否可换行，默认为true
-});
-```
-
-组件会通过 `<select>` 元素生成列表元素，如：
-
-```html
-<select>
+<select class="name-list">
     <option data-key="George Washington">George Washington</option>
     <option data-key="John Adams">John Adams</option>
     <option data-key="Thomas Jefferson">Thomas Jefferson</option>
 </select>
-<script type="text/javascript">
-    $(function() {
-        simple.select({
-            el: $('select')
-        });
-    });
-</script>
 ```
 
-### 方法和事件
-
-simple-select 初始化之后，select 实例会暴露一些公共方法供调用：
-
-```javascript
-// 初始化 simple-select
-var select = simple.select({
-  el: $('select')
+```js
+simple.select({
+  el: '.name-list'
 });
-
-// 调用 selectItem 方法选择第三个元素
-select.selectItem(2);
 ```
 
-#### 公共方法
+### Options
 
-**setItems(items)**
+__el__
 
-设置 simple-select 列表元素，`label` `key` 为必须属性，所有属性都保存在对应 item 的 data 属性里：
+Selector/Element/jQuery Object, Required, specify the select element to be initialized with.
 
-```javascript
-select.setItems([{
-  label: "张三",
-  hint: '#1',
-  key: "zhangsan zs 张三",
-  id: "1"
-},{
-  label: "李四",
-  hint: '#2',
-  key: "lisi ls 李四",
-  id: "2"
-},{
-  label: "王麻子",
-  hint: '#3',
-  key: "wangmazi wmz 王麻子",
-  id: "3"
-}]);
-```
+__url__
 
-**selectItem(index)**
+String, the api url to get remote select options data. This option is required unless `el` option is present.
 
-选择对应的列表元素，返回该元素的属性：
+__cls__
 
-```javascript
-select.selectItem(2);
-// 返回
-// {
-//   label: "王麻子",
-//   hint: '#2',
-//   key: "wangmazi wmz 王麻子",
-//   id: "3"
-// }
-```
+String, extra html class to be added to wrapper element for style customization.
 
-**clearSelection()**
+__onItemRender__
 
-清除输入内容和选择的元素。
+Function, callback function to be called when item renders in dropdown list with two params: item element and item data.
 
-**destroy()**
+__placeholder__
 
-恢复到初始化之前的状态。
+String, set placeholder for input element. The default placeholder is the text of blank option if it exists.
+
+__allowInput__
+
+false/Selector/Element/jQuery Object, false by default, set an `input:text` element to allow input value outside the select options, .
+
+__workWrap__
+
+Boolean, false by default, set true to allow word wrap in input and dropdown list items.
+
+__locales__
+
+Hash, set custom locale texts for a single instance. If you want to set default locales for all simple-select instances, use `simple.select.locales` instead.
 
 
-#### 事件
+### Methods
 
-**select**
+__setItems__
 
-触发条件：选择某个列表元素。返回该元素的属性。
+(`Array` items), set select options by json data. The original options in select element will be overwrite.
+
+__selectItem__
+
+(`String`, value), set selected option by value.
+
+__clear__
+
+clear selected option and value of input.
+
+__disable__
+
+Disable component, user input is not allowed.
+
+__enable__
+
+Enable component, user input is accepted.
+
+__destroy__
+
+Destroy component, retore it to original state.
+
+### Events
+
+__select__
+
+Triggered after some item is selected with two params: item data and item element.
 
 **clear**
 
-触发条件：清除输入内容和选择的元素。
+Triggered after `clear()` method is called or clear button is clicked.

@@ -61,9 +61,7 @@ module.exports = (grunt) ->
           specs: 'spec/select-spec.js'
           vendor: [
             'vendor/bower/jquery/dist/jquery.min.js'
-            'vendor/bower/jquery-mousewheel/jquery.mousewheel.min.js'
             'vendor/bower/simple-module/lib/module.js'
-            'vendor/bower/simple-util/lib/util.js'
           ]
 
   grunt.loadNpmTasks 'grunt-contrib-sass'
