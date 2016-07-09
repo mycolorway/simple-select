@@ -1,9 +1,9 @@
 {
-  "name": "simple-select",
+  "name": "simple_select",
   "version": "2.1.0",
   "homepage": "https://github.com/mycolorway/simple-select",
   "authors": [
-    "kshift <kshift.lv@gmail.com>"
+    "farthinker <farthinker@gmail.com>"
   ],
   "description": "a simple select plugin based on Simple Module",
   "main": "lib/select.js",

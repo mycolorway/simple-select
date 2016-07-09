@@ -3,6 +3,7 @@ class Select extends SimpleModule
   opts:
     el: null
     url: null
+    remote: false
     cls: ""
     onItemRender: $.noop
     placeholder: ""
@@ -11,8 +12,8 @@ class Select extends SimpleModule
     locales: null
 
   @locales:
-    loadingMessage: 'Loading...'
-    no_results: 'No results found'
+    loading: 'Loading...'
+    noResults: 'No results found'
 
   @_tpl:
     wrapper: """
@@ -42,7 +43,7 @@ class Select extends SimpleModule
       return
 
     @el.data("simpleSelect")?.destroy()
-    @locales = @opts.locales || Select.locales
+    @locales = $.extend {}, Select.locales, @opts.locales
 
     @_render()
     @_bind()
@@ -55,9 +56,7 @@ class Select extends SimpleModule
       .addClass(@opts.cls)
       .insertBefore @el
 
-    if @opts.allowInput
-      @input = $ @opts.allowInput
-    else if @opts.wordWrap
+    if @opts.wordWrap
       @wrapper.addClass('word-wrap')
       @input = $ '<textarea rows="1">'
     else
@@ -68,11 +67,9 @@ class Select extends SimpleModule
       .prependTo @wrapper
     @list = @wrapper.find ".select-list"
 
-    if @opts.url
-      @wrapper.addClass 'allow-empty'
-    else
-      @_initItems()
-      @selectItem @el.val()
+    @_initItems()
+    @selectItem @el.val()
+    @wrapper.addClass('allow-empty') if @opts.remote
 
     if @opts.wordWrap
       @_autoresizeInput()
@@ -118,14 +115,16 @@ class Select extends SimpleModule
     @items = items
     @el.empty()
 
-    if $.isArray(items)
+    if $.isArray(items) && items.length > 0
       renderOptions @el, items
-    else if $.isPlainObject(items)
+    else if $.isPlainObject(items) && !$.isEmptyObject(items)
       $.each items, (groupName, groupItems) =>
         $group = $ "<optgroup>",
           label: groupName
         renderOptions $group, groupItems
         @el.append $group
+    else if @opts.remote
+      @el.append '<option>'
 
     @_generateList @items
     @_checkBlankOption()
@@ -134,7 +133,10 @@ class Select extends SimpleModule
     $blankOption = @el.find('option:not([value]), option[value=""]')
     @_allowEmpty = $blankOption.length > 0
     @wrapper.toggleClass 'allow-empty', @_allowEmpty
-    placeholder = (@_allowEmpty && $blankOption.text()) || @opts.placeholder
+    @_setPlaceholder $blankOption.text()
+
+  _setPlaceholder: (placeholder) ->
+    placeholder ||= @opts.placeholder
     @input.attr("placeholder", placeholder) if placeholder
 
   _generateList: (items) ->
@@ -164,7 +166,7 @@ class Select extends SimpleModule
         children.push $itemEl[0]
     else
       $noResults = $('<div class="no-results"></div>')
-        .text @locales.no_results
+        .text @locales.noResults
       children.push $noResults[0]
 
     @list.append children
@@ -176,15 +178,16 @@ class Select extends SimpleModule
     return unless $item.length > 0
     item = $item.data 'item'
 
-    if @opts.url
-      @setValue item[0]
+    @input.val item[0]
+    if @opts.remote
+      @list.empty()
     else
-      @input.val item[0]
       @_generateList @items
 
     @wrapper.addClass "selected"
     @_toggleList false
     @el.val item[1]
+    $(@opts.allowInput).val('') if @opts.allowInput
     @triggerHandler "select", [item, $item]
     @_autoresizeInput()
     item
@@ -230,9 +233,9 @@ class Select extends SimpleModule
       if @_inputTimer
         clearTimeout @_inputTimer
         @_inputTimer = null
-      setTimeout =>
+      @_inputTimer = setTimeout =>
         @_input(e)
-      , 100
+      , 200
     .on "blur.simple-select", (e) =>
       @_blur(e)
     .on "focus.simple-select", (e) =>
@@ -241,17 +244,20 @@ class Select extends SimpleModule
   _validateInput: ->
     return if @wrapper.hasClass("selected")
 
-    value = $.trim @input.val()
-    if @opts.allowInput
-      @el.val ''
-    else if value
-      $item = @list.find(".select-item[data-value='#{value}']")
+    if value = $.trim @input.val()
+      $item = @list.find(".select-item:contains('#{value}')")
       $item = @list.find('.select-item:first') unless $item.length > 0
 
       if $item.length > 0
         @selectItem $item
+      else if @opts.allowInput
+        @el.val ''
+        $(@opts.allowInput).val value
       else
         @setValue ''
+    else
+      @el.val ''
+      $(@opts.allowInput).val('') if @opts.allowInput
 
   _keydown: (e) ->
     if e.which == 40 or e.which == 38  # up and down
@@ -303,21 +309,25 @@ class Select extends SimpleModule
     @el.val ''
 
     value = $.trim @input.val()
-    if @opts.url
+    if @opts.remote
       @list.empty()
+      @el.empty().append('<option>')
       if value
         $('<div class="loading"></div>')
           .text @locales.loading
           .appendTo @list
 
         $.ajax
-          url: @opts.url
+          url: @opts.remote.url
+          data: $.extend {}, @opts.remote.params,
+            "#{@opts.remote.searchKey}": value
           dataType: 'json'
         .done (items) =>
-          items = [] unless $.isArray(items)
-          items = items.slice(0, 50) if items.length > 50
+          items ||= []
+          items = items.slice(0, 50) if $.isArray(items) && items.length > 50
           @setItems items
           @list.find('.select-item:first').addClass 'selected'
+          @_toggleList true
       else
         @_toggleList false
     else
@@ -362,7 +372,7 @@ class Select extends SimpleModule
 
   _focus: (e) ->
     @_focused = true
-    return if @opts.url && !@input.val()
+    return if @opts.remote && (!@input.val() || @wrapper.hasClass('selected'))
     @_toggleList true
     setTimeout =>
       @input.select()
@@ -393,11 +403,6 @@ class Select extends SimpleModule
     @wrapper.removeClass 'disabled'
 
   destroy: ->
-    if @opts.allowInput
-      @input.off '.simple-select'
-        .removeClass 'select-result'
-        .removeAttr 'autocomplete placeholder'
-        .insertAfter @el
     @wrapper.remove()
     @el.removeData 'simpleSelect'
     @el.show()

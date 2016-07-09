@@ -31,9 +31,19 @@ __el__
 
 Selector/Element/jQuery Object, Required, specify the select element to be initialized with.
 
-__url__
+__remote__
 
-String, the api url to get remote select options data. This option is required unless `el` option is present.
+false/Hash, set a hash to enable remote data source mode. The hash may contain three key/value pairs:
+
+```js
+{
+  url: 'xxx', // ajax api url, required
+  searchKey: 'name', // param key for the user input search value, required
+  params: {} // extra params passing to the server, optional
+}
+```
+
+ This option is required unless `el` option is present.
 
 __cls__
 

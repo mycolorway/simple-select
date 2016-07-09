@@ -4,7 +4,6 @@
   selectEl = null;
 
   beforeEach(function() {
-    console.log(jasmine.Ajax.install);
     return selectEl = $("<select id=\"select-one\">\n  <option value=\"0\" data-key=\"George Washington\">George Washington</option>\n  <option value=\"1\" data-key=\"John Adams\">John Adams</option>\n  <option value=\"2\" data-key=\"Thomas Jefferson\">Thomas Jefferson</option>\n</select>");
   });
 
