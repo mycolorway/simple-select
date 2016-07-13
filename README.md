@@ -11,7 +11,21 @@ Simple Select
 
 Autocomplete select component, supports html options data source, json data source or ajax remote data source.
 
-### Usage
+## Installation
+
+Install via npm:
+
+```bash
+npm install --save simple-select
+```
+
+Install via bower:
+
+```bash
+bower install --save simple-select
+```
+
+## Usage
 
 ```html
 <link rel="stylesheet" type="text/css" href="[style path]/select.css" />
@@ -33,7 +47,7 @@ simple.select({
 });
 ```
 
-### Options
+## Options
 
 __el__
 
@@ -78,7 +92,7 @@ __locales__
 Hash, set custom locale texts for a single instance. If you want to set default locales for all simple-select instances, use `simple.select.locales` instead.
 
 
-### Methods
+## Methods
 
 __setItems__
 
@@ -104,7 +118,7 @@ __destroy__
 
 Destroy component, retore it to original state.
 
-### Events
+## Events
 
 __select__
 
@@ -113,3 +127,53 @@ Triggered after some item is selected with two params: item data and item elemen
 **clear**
 
 Triggered after `clear()` method is called or clear button is clicked.
+
+
+## Development
+
+Clone repository from github:
+
+```bash
+git clone https://github.com/mycolorway/simple-select.git
+```
+
+Install npm dependencies:
+
+```bash
+npm install
+```
+
+Run default gulp task to build project, which will compile source files, run test and watch file changes for you:
+
+```bash
+gulp
+```
+
+Now, you are ready to go.
+
+## Publish
+
+If you want to publish new version to npm and bower, please make sure all tests have passed before you publish new version, and you need do these preparations:
+
+* Add new release information in `CHANGELOG.md`. The format of markdown contents will matter, because build scripts will get version and release content from this file by regular expression. You can follow the format of the older release information.
+
+* Put your [personal API tokens](https://github.com/blog/1509-personal-api-tokens) in `/.token.json`, which is required by the build scripts to request [Github API](https://developer.github.com/v3/) for creating new release:
+
+```json
+{
+  "github": "[your github personal access token]"
+}
+```
+
+Now you can run `gulp publish` task, which will do these work for you:
+
+* Get version number from `CHANGELOG.md` and bump it into `package.json` and `bower.json`.
+* Get release information from `CHANGELOG.md` and request Github API to create new release.
+
+If everything goes fine, you can see your release at [https://github.com/mycolorway/simple-select/releases](https://github.com/mycolorway/simple-select/releases). At the End you can publish new version to npm with the command:
+
+```bash
+npm publish
+```
+
+Please be careful with the last step, because you cannot delete or republish a release on npm.
