@@ -1,4 +1,4 @@
-class Select extends SimpleModule
+class SimpleSelect extends SimpleModule
 
   opts:
     el: null
@@ -39,11 +39,11 @@ class Select extends SimpleModule
   _init: ->
     @el = $(@opts.el)
     unless @el.length > 0
-      throw "simple select: option el is required"
+      throw new Error "simple select: option el is required"
       return
 
     @el.data("simpleSelect")?.destroy()
-    @locales = $.extend {}, Select.locales, @opts.locales
+    @locales = $.extend {}, SimpleSelect.locales, @opts.locales
 
     @_render()
     @_bind()
@@ -51,7 +51,7 @@ class Select extends SimpleModule
   _render: ->
     @el.hide()
       .data("simpleSelect", @)
-    @wrapper = $(Select._tpl.wrapper)
+    @wrapper = $(SimpleSelect._tpl.wrapper)
       .data("simpleSelect", @)
       .addClass(@opts.cls)
       .insertBefore @el
@@ -79,14 +79,14 @@ class Select extends SimpleModule
   _initItems: ->
     getItems = ($options) ->
       items = []
-      $options.each (i, option) =>
+      $options.each (i, option) ->
         $option = $ option
         value = $option.val()
         return unless value
         attrs = $option.data()
         unless $.isEmptyObject(attrs)
           newAttrs = {}
-          $.each Object.keys(attrs), (i, key) =>
+          $.each Object.keys(attrs), (i, key) ->
             newAttrs["data-#{key}"] = attrs[key]
           attrs = newAttrs
         items.push [$option.text(), value, attrs]
@@ -105,7 +105,7 @@ class Select extends SimpleModule
 
   setItems: (items) ->
     renderOptions = ($container, items) ->
-      $.each items, (i, item) =>
+      $.each items, (i, item) ->
         $option = $ '<option>', $.extend
           text: item[0]
           value: item[1]
@@ -141,7 +141,7 @@ class Select extends SimpleModule
 
   _generateList: (items) ->
     itemEl = (item) ->
-      $itemEl = $(Select._tpl.item).data('item', item)
+      $itemEl = $(SimpleSelect._tpl.item).data('item', item)
       $itemEl.find(".label span").text(item[0])
       $itemEl.attr 'data-value', item[1]
       if item.length > 2 && (hint = item[2]['data-hint'])
@@ -158,11 +158,13 @@ class Select extends SimpleModule
         $.each groupItems, (i, item) =>
           $itemEl = itemEl item
           children.push $itemEl[0]
-          @opts.onItemRender.call(@, $itemEl, item) if $.isFunction @opts.onItemRender
+          if $.isFunction @opts.onItemRender
+            @opts.onItemRender.call(@, $itemEl, item)
     else if $.isArray(items) && items.length > 0
       $.each items, (i, item) =>
         $itemEl = itemEl item
-        @opts.onItemRender.call(@, $itemEl, item) if $.isFunction @opts.onItemRender
+        if $.isFunction @opts.onItemRender
+          @opts.onItemRender.call(@, $itemEl, item)
         children.push $itemEl[0]
     else
       $noResults = $('<div class="no-results"></div>')
@@ -353,14 +355,14 @@ class Select extends SimpleModule
 
     if $.isPlainObject(@items)
       items = {}
-      $.each @items, (groupName, groupItems) =>
-        $.each groupItems, (i, item) =>
+      $.each @items, (groupName, groupItems) ->
+        $.each groupItems, (i, item) ->
           if isMatched item
             items[groupName] ||= []
             items[groupName].push item
     else
       items = []
-      $.each @items, (i, item) =>
+      $.each @items, (i, item) ->
         items.push(item) if isMatched item
 
     items
@@ -385,7 +387,10 @@ class Select extends SimpleModule
   _autoresizeInput: ->
     return unless @opts.wordWrap
     @input.css("height", 0)
-    @input.css("height", parseInt(@input[0].scrollHeight) + parseInt(@input.css("border-top-width")) + parseInt(@input.css("border-bottom-width")))
+    scrollHeight = parseInt(@input[0].scrollHeight)
+    borderTop = parseInt(@input.css("border-top-width"))
+    borderBottom = parseInt(@input.css("border-bottom-width"))
+    @input.css("height", scrollHeight + borderTop + borderBottom)
     @_positionList()
 
   _positionList: ->
@@ -406,7 +411,4 @@ class Select extends SimpleModule
     @el.removeData 'simpleSelect'
     @el.show()
 
-select = (opts) ->
-  new Select(opts)
-
-select.locales = Select.locales
+module.exports = SimpleSelect

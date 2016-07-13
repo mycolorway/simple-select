@@ -5,27 +5,18 @@
   "authors": [
     "farthinker <farthinker@gmail.com>"
   ],
-  "description": "a simple select plugin based on Simple Module",
-  "main": "lib/select.js",
-  "keywords": [
-    "sample",
-    "select"
-  ],
+  "description": "Autocomplete select component",
+  "main": "dist/simple-select.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
-    "node_modules",
-    "vendor",
-    "Gemfile",
-    "Gemfile.lock",
-    "Gruntfile.coffee",
-    "package.json",
-    "README.md",
-    "umd.hbs",
-    "demo.gif"
+    "test",
+    "build",
+    "gulpfile.coffee",
+    "package.json"
   ],
   "dependencies": {
-    "jquery": "2.x",
-    "simple-module": "~2.0.5"
+    "jquery": "~2.2.4",
+    "simple-module": "~2.0.6"
   }
 }

@@ -1,32 +1,39 @@
-(function (root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module unless amdModuleId is set
-    define('simple-select', ["jquery","simple-module"], function (a0,b1) {
-      return (root['select'] = factory(a0,b1));
-    });
-  } else if (typeof exports === 'object') {
-    // Node. Does not work with strict CommonJS, but
-    // only CommonJS-like environments that support module.exports,
-    // like Node.
-    module.exports = factory(require("jquery"),require("simple-module"));
+/**
+ * simple-select v2.1.0
+ * http://mycolorway.github.io/simple-select
+ *
+ * Copyright Mycolorway Design
+ * Released under the MIT license
+ * http://mycolorway.github.io/simple-select/license.html
+ *
+ * Date: 2016-07-14
+ */
+;(function(root, factory) {
+  if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('jquery'),require('simple-module'));
   } else {
+    root.SimpleSelect = factory(root.jQuery,root.SimpleModule);
     root.simple = root.simple || {};
-    root.simple['select'] = factory(jQuery,SimpleModule);
+    root.simple.select = function (opts) {
+      return new root.SimpleSelect(opts);
+    }
+    root.simple.select.locales = root.SimpleSelect.locales;
   }
-}(this, function ($, SimpleModule) {
-
-var Select, select,
+}(this, function ($,SimpleModule) {
+var define, module, exports;
+var b = (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var SimpleSelect,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-Select = (function(superClass) {
-  extend(Select, superClass);
+SimpleSelect = (function(superClass) {
+  extend(SimpleSelect, superClass);
 
-  function Select() {
-    return Select.__super__.constructor.apply(this, arguments);
+  function SimpleSelect() {
+    return SimpleSelect.__super__.constructor.apply(this, arguments);
   }
 
-  Select.prototype.opts = {
+  SimpleSelect.prototype.opts = {
     el: null,
     url: null,
     remote: false,
@@ -38,21 +45,21 @@ Select = (function(superClass) {
     locales: null
   };
 
-  Select.locales = {
+  SimpleSelect.locales = {
     loading: 'Loading...',
     noResults: 'No results found'
   };
 
-  Select._tpl = {
+  SimpleSelect._tpl = {
     wrapper: "<div class=\"simple-select\">\n  <span class=\"link-expand\">\n    <i class=\"icon-caret-down\"><span>&#9662;</span></i>\n  </span>\n  <span class=\"link-clear\">\n    <i class=\"icon-delete\"><span>&#10005;</span></i>\n  </span>\n  <div class=\"select-list\">\n  </div>\n</div>",
     item: "<div class=\"select-item\">\n  <a href=\"javascript:;\" class=\"label\"><span></span></a>\n  <span class=\"hint\"></span>\n</div>"
   };
 
-  Select.prototype._init = function() {
+  SimpleSelect.prototype._init = function() {
     var ref;
     this.el = $(this.opts.el);
     if (!(this.el.length > 0)) {
-      throw "simple select: option el is required";
+      throw new Error("simple select: option el is required");
       return;
     }
     if ((ref = this.el.data("simpleSelect")) != null) {
@@ -63,7 +70,7 @@ Select = (function(superClass) {
     return this._bind();
   };
 
-  Select.prototype._render = function() {
+  SimpleSelect.prototype._render = function() {
     this.el.hide().data("simpleSelect", this);
     this.wrapper = $(Select._tpl.wrapper).data("simpleSelect", this).addClass(this.opts.cls).insertBefore(this.el);
     if (this.opts.wordWrap) {
@@ -86,30 +93,28 @@ Select = (function(superClass) {
     }
   };
 
-  Select.prototype._initItems = function() {
+  SimpleSelect.prototype._initItems = function() {
     var $groups, getItems;
     getItems = function($options) {
       var items;
       items = [];
-      $options.each((function(_this) {
-        return function(i, option) {
-          var $option, attrs, newAttrs, value;
-          $option = $(option);
-          value = $option.val();
-          if (!value) {
-            return;
-          }
-          attrs = $option.data();
-          if (!$.isEmptyObject(attrs)) {
-            newAttrs = {};
-            $.each(Object.keys(attrs), function(i, key) {
-              return newAttrs["data-" + key] = attrs[key];
-            });
-            attrs = newAttrs;
-          }
-          return items.push([$option.text(), value, attrs]);
-        };
-      })(this));
+      $options.each(function(i, option) {
+        var $option, attrs, newAttrs, value;
+        $option = $(option);
+        value = $option.val();
+        if (!value) {
+          return;
+        }
+        attrs = $option.data();
+        if (!$.isEmptyObject(attrs)) {
+          newAttrs = {};
+          $.each(Object.keys(attrs), function(i, key) {
+            return newAttrs["data-" + key] = attrs[key];
+          });
+          attrs = newAttrs;
+        }
+        return items.push([$option.text(), value, attrs]);
+      });
       return items;
     };
     if (($groups = this.el.find('optgroup')).length > 0) {
@@ -128,19 +133,17 @@ Select = (function(superClass) {
     return this._checkBlankOption();
   };
 
-  Select.prototype.setItems = function(items) {
+  SimpleSelect.prototype.setItems = function(items) {
     var renderOptions;
     renderOptions = function($container, items) {
-      return $.each(items, (function(_this) {
-        return function(i, item) {
-          var $option;
-          $option = $('<option>', $.extend({
-            text: item[0],
-            value: item[1]
-          }, item.length > 2 ? item[2] : null));
-          return $container.append($option);
-        };
-      })(this));
+      return $.each(items, function(i, item) {
+        var $option;
+        $option = $('<option>', $.extend({
+          text: item[0],
+          value: item[1]
+        }, item.length > 2 ? item[2] : null));
+        return $container.append($option);
+      });
     };
     this.items = items;
     this.el.empty();
@@ -164,7 +167,7 @@ Select = (function(superClass) {
     return this._checkBlankOption();
   };
 
-  Select.prototype._checkBlankOption = function() {
+  SimpleSelect.prototype._checkBlankOption = function() {
     var $blankOption;
     $blankOption = this.el.find('option:not([value]), option[value=""]');
     this._allowEmpty = $blankOption.length > 0;
@@ -172,14 +175,14 @@ Select = (function(superClass) {
     return this._setPlaceholder($blankOption.text());
   };
 
-  Select.prototype._setPlaceholder = function(placeholder) {
+  SimpleSelect.prototype._setPlaceholder = function(placeholder) {
     placeholder || (placeholder = this.opts.placeholder);
     if (placeholder) {
       return this.input.attr("placeholder", placeholder);
     }
   };
 
-  Select.prototype._generateList = function(items) {
+  SimpleSelect.prototype._generateList = function(items) {
     var $noResults, children, itemEl;
     itemEl = function(item) {
       var $itemEl, hint;
@@ -228,7 +231,7 @@ Select = (function(superClass) {
     return this.list.append(children);
   };
 
-  Select.prototype.selectItem = function($item) {
+  SimpleSelect.prototype.selectItem = function($item) {
     var item;
     if (!$item) {
       return;
@@ -257,12 +260,12 @@ Select = (function(superClass) {
     return item;
   };
 
-  Select.prototype.setValue = function(value) {
+  SimpleSelect.prototype.setValue = function(value) {
     this.input.val(value);
     return this._input();
   };
 
-  Select.prototype._toggleList = function(expand) {
+  SimpleSelect.prototype._toggleList = function(expand) {
     if (expand == null) {
       expand = null;
     }
@@ -277,14 +280,14 @@ Select = (function(superClass) {
     }
   };
 
-  Select.prototype._scrollToItem = function($item) {
+  SimpleSelect.prototype._scrollToItem = function($item) {
     $item || ($item = this.list.find('.select-item.selected'));
     if ($item.length > 0) {
       return this.list.scrollTop($item.position().top);
     }
   };
 
-  Select.prototype._bind = function() {
+  SimpleSelect.prototype._bind = function() {
     this.wrapper.find(".link-clear").on("mousedown", (function(_this) {
       return function(e) {
         _this.clear();
@@ -334,7 +337,7 @@ Select = (function(superClass) {
     })(this));
   };
 
-  Select.prototype._validateInput = function() {
+  SimpleSelect.prototype._validateInput = function() {
     var $item, value;
     if (this.wrapper.hasClass("selected")) {
       return;
@@ -360,7 +363,7 @@ Select = (function(superClass) {
     }
   };
 
-  Select.prototype._keydown = function(e) {
+  SimpleSelect.prototype._keydown = function(e) {
     var $nextEl, $prevEl, $selectedEl;
     if (e.which === 40 || e.which === 38) {
       e.preventDefault();
@@ -407,7 +410,7 @@ Select = (function(superClass) {
     }
   };
 
-  Select.prototype._input = function(e) {
+  SimpleSelect.prototype._input = function(e) {
     var filteredItems, obj, value;
     this._autoresizeInput();
     this.wrapper.removeClass("selected");
@@ -454,12 +457,12 @@ Select = (function(superClass) {
     }
   };
 
-  Select.prototype._filterItems = function(value) {
-    var e, isMatched, items, re;
+  SimpleSelect.prototype._filterItems = function(value) {
+    var e, error, isMatched, items, re;
     try {
       re = new RegExp("(|\\s)" + value, "i");
-    } catch (_error) {
-      e = _error;
+    } catch (error) {
+      e = error;
       re = new RegExp("", "i");
     }
     isMatched = function(item) {
@@ -469,89 +472,84 @@ Select = (function(superClass) {
     };
     if ($.isPlainObject(this.items)) {
       items = {};
-      $.each(this.items, (function(_this) {
-        return function(groupName, groupItems) {
-          return $.each(groupItems, function(i, item) {
-            if (isMatched(item)) {
-              items[groupName] || (items[groupName] = []);
-              return items[groupName].push(item);
-            }
-          });
-        };
-      })(this));
+      $.each(this.items, function(groupName, groupItems) {
+        return $.each(groupItems, function(i, item) {
+          if (isMatched(item)) {
+            items[groupName] || (items[groupName] = []);
+            return items[groupName].push(item);
+          }
+        });
+      });
     } else {
       items = [];
-      $.each(this.items, (function(_this) {
-        return function(i, item) {
-          if (isMatched(item)) {
-            return items.push(item);
-          }
-        };
-      })(this));
+      $.each(this.items, function(i, item) {
+        if (isMatched(item)) {
+          return items.push(item);
+        }
+      });
     }
     return items;
   };
 
-  Select.prototype._blur = function(e) {
+  SimpleSelect.prototype._blur = function(e) {
     this._validateInput();
     this._toggleList(false);
     return this._focused = false;
   };
 
-  Select.prototype._focus = function(e) {
+  SimpleSelect.prototype._focus = function(e) {
     this._focused = true;
     if (!(this.opts.remote && (!this.input.val() || this.wrapper.hasClass('selected')))) {
       return this._toggleList(true);
     }
   };
 
-  Select.prototype.clear = function() {
+  SimpleSelect.prototype.clear = function() {
     this.setValue('');
     this._toggleList(false);
     return this.triggerHandler("clear");
   };
 
-  Select.prototype._autoresizeInput = function() {
+  SimpleSelect.prototype._autoresizeInput = function() {
+    var borderBottom, borderTop, scrollHeight;
     if (!this.opts.wordWrap) {
       return;
     }
     this.input.css("height", 0);
-    this.input.css("height", parseInt(this.input[0].scrollHeight) + parseInt(this.input.css("border-top-width")) + parseInt(this.input.css("border-bottom-width")));
+    scrollHeight = parseInt(this.input[0].scrollHeight);
+    borderTop = parseInt(this.input.css("border-top-width"));
+    borderBottom = parseInt(this.input.css("border-bottom-width"));
+    this.input.css("height", scrollHeight + borderTop + borderBottom);
     return this._positionList();
   };
 
-  Select.prototype._positionList = function() {
+  SimpleSelect.prototype._positionList = function() {
     return this.list.css('top', this.input.outerHeight() + 2);
   };
 
-  Select.prototype.disable = function() {
+  SimpleSelect.prototype.disable = function() {
     this.input.prop('disabled', true);
     this.el.prop('disabled', true);
     return this.wrapper.addClass('disabled');
   };
 
-  Select.prototype.enable = function() {
+  SimpleSelect.prototype.enable = function() {
     this.input.prop('disabled', false);
     this.el.prop('disabled', false);
     return this.wrapper.removeClass('disabled');
   };
 
-  Select.prototype.destroy = function() {
+  SimpleSelect.prototype.destroy = function() {
     this.wrapper.remove();
     this.el.removeData('simpleSelect');
     return this.el.show();
   };
 
-  return Select;
+  return SimpleSelect;
 
 })(SimpleModule);
 
-select = function(opts) {
-  return new Select(opts);
-};
+},{}]},{},[1]);
 
-select.locales = Select.locales;
-
-return select;
-
+return b(1);
 }));

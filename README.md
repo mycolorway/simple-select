@@ -1,5 +1,13 @@
-simple-select
+Simple Select
 =============
+
+[![Latest Version](https://img.shields.io/npm/v/simple-select.svg)](https://www.npmjs.com/package/simple-select)
+[![Build Status](https://img.shields.io/travis/mycolorway/simple-select.svg)](https://travis-ci.org/mycolorway/simple-select)
+[![Coveralls](https://img.shields.io/coveralls/mycolorway/simple-select.svg)](https://coveralls.io/github/mycolorway/simple-select)
+[![David](https://img.shields.io/david/mycolorway/simple-select.svg)](https://david-dm.org/mycolorway/simple-select)
+[![David](https://img.shields.io/david/dev/mycolorway/simple-select.svg)](https://david-dm.org/mycolorway/simple-select#info=devDependencies)
+[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/mycolorway/simple-select)
+
 
 Autocomplete select component, supports html options data source, json data source or ajax remote data source.
 
