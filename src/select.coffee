@@ -372,10 +372,9 @@ class Select extends SimpleModule
 
   _focus: (e) ->
     @_focused = true
-    return if @opts.remote && (!@input.val() || @wrapper.hasClass('selected'))
-    @_toggleList true
-    setTimeout =>
-      @input.select()
+    # @input.select()
+    unless @opts.remote && (!@input.val() || @wrapper.hasClass('selected'))
+      @_toggleList(true)
 
   clear: ->
     @setValue ''
