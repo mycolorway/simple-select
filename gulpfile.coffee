@@ -12,7 +12,7 @@ gulp.task 'default', gulp.series lint, compile, test, (done) ->
   gulp.watch 'build/**/*.coffee', lint
 
   gulp.watch 'src/**/*.coffee', gulp.series compile.coffee, test
-  gulp.watch 'src/**/*.scss', compile.sass
+  gulp.watch 'styles/**/*.scss', compile.sass
   gulp.watch 'test/**/*.coffee', test
 
   done()

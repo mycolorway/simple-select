@@ -4,7 +4,7 @@
     <title>A simple select plugin</title>
     <meta charset="utf-8" />
 
-    <link media="all" rel="stylesheet" type="text/css" href="styles/select.css" />
+    <link media="all" rel="stylesheet" type="text/css" href="styles/simple-select.css" />
     <style type="text/css" media="all">
         body {
             margin: 0;
@@ -23,52 +23,23 @@
     <script type="text/javascript" src="dist/simple-select.js"></script>
     <script type="text/javascript">
     $(function() {
-      simple.select({
+      var selectOne = simple.select({
         el: $('#select-one'),
         placeholder: 'type sth...',
         allowInput: '#select-one-name',
-        multiline: false
+        noWrap: true
       });
 
-      simple.select({
-        el: $('#select-three'),
-        placeholder: 'type sth...'
+      selectOne.on('change', function(e, selection) {
+        console.log(selection, selectOne.el.val());
       });
 
-
-      var select = simple.select({
-        el: $('#select-two'),
-        placeholder: 'type sth...',
-        onItemRender: function($itemEl, item) {
-          $itemEl.find('.label').prepend("<i class='fa fa-male'></i> ");
-        }
+      var selectTwo = simple.select({
+        el: $('#select-two')
       });
 
-      select.setItems([
-        ["张三", "1", {"data-key": "zhangsan zs 张三"}],
-        ["李四", "2", {"data-key": "lisi ls 李四"}],
-        ["王麻子", "3", {"data-key": "wangmazi wmz 王麻子"}]
-      ]);
-
-      select.on('select', function(e, item) {
-        select.el.after("<p>" + item[0] + "</p>");
-      });
-
-      var select = simple.select({
-        el: $('#select-four'),
-        placeholder: 'type sth...',
-        wordWrap: true
-      });
-
-      select.setItems({
-        "SwedishCars": [
-          ["Volvo", "1", {"data-key": "volvo"}],
-          ["Saab", "2", {"data-key": "saab"}]
-        ],
-        "GermanCars": [
-          ["Mercedes", "3", {"data-key": "mercedes"}],
-          ["Audi", "4", {"data-key": "audi"}]
-        ]
+      selectTwo.on('change', function(e, selection) {
+        console.log(selection, selectTwo.el.val());
       });
     });
     </script>
@@ -77,40 +48,27 @@
 <body>
     <div class="wrapper">
         <div class="demo-one">
-            <h3>Demo one: multiline as false</h3>
+            <h3>Demo one: single select</h3>
             <select id="select-one">
               <optgroup label="Swedish Cars">
-                <option value="volvo">Volvo</option>
-                <option value="saab">Saab</option>
+                <option value="volvo" data-hint="car 1">Volvo</option>
+                <option value="saab" data-hint="car 2">Saab</option>
               </optgroup>
               <optgroup label="German Cars">
-                <option value="mercedes">Mercedes</option>
-                <option value="audi">Audi</option>
+                <option value="mercedes" data-hint="car 3">Mercedes</option>
+                <option value="audi" data-hint="car 4">Audi</option>
               </optgroup>
             </select>
-            <input type="text" id="select-one-name">
+            <input type="hidden" id="select-one-name">
         </div>
 
         <div class="demo-two">
-            <h3>Demo two: without non value option</h3>
-
-            <select id="select-two">
-            </select>
-        </div>
-
-        <div class="demo-three">
-            <h3>Demo three: with non value option</h3>
-            <select id="select-three">
+            <h3>Demo Two: multiple select</h3>
+            <select id="select-two" multiple="true">
                 <option value="">select something</option>
                 <option value="0" data-key="George Washington">George Washington</option>
                 <option value="1" data-key="John Adams">John Adams</option>
-                <option value="2" data-key="Thomas Jefferson">Thomas Jefferson Thomas Jefferson Thomas Jefferson</option>
-            </select>
-        </div>
-
-        <div class="demo-four">
-            <h3>Demo Four: call setItems with object</h3>
-            <select id="select-four">
+                <option value="2" data-key="Thomas Jefferson">Thomas Jefferson</option>
             </select>
         </div>
     </div>

@@ -9,7 +9,7 @@ uglify = require './helpers/uglify'
 umd = require './helpers/umd'
 
 compileSass = ->
-  gulp.src 'src/**/*.scss'
+  gulp.src 'styles/**/*.scss'
     .pipe sass()
     .pipe header()
     .pipe gulp.dest('styles/')

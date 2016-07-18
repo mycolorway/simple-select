@@ -9,7 +9,7 @@ Simple Select
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/mycolorway/simple-select)
 
 
-Autocomplete select component, supports html options data source, json data source or ajax remote data source.
+Autocomplete select component, supports multiple select mode and ajax remote data source.
 
 ## Installation
 
@@ -34,7 +34,7 @@ bower install --save simple-select
 <script type="text/javascript" src="[script path]/module.js"></script>
 <script type="text/javascript" src="[script path]/select.js"></script>
 
-<select class="name-list">
+<select class="name-list" multiple="true">
     <option data-key="George Washington">George Washington</option>
     <option data-key="John Adams">John Adams</option>
     <option data-key="Thomas Jefferson">Thomas Jefferson</option>
@@ -46,6 +46,8 @@ simple.select({
   el: '.name-list'
 });
 ```
+
+Note: if element is a `[multiple]` select, the multiple mode will be activated automatically.
 
 ## Options
 
@@ -81,11 +83,11 @@ String, set placeholder for input element. The default placeholder is the text o
 
 __allowInput__
 
-false/Selector/Element/jQuery Object, false by default, set an `input:text` element to allow input value outside the select options, .
+false/Selector/Element/jQuery Object, false by default, set an `input:text` element to allow submit custom value outside select options.
 
-__workWrap__
+__noWrap__
 
-Boolean, false by default, set true to allow word wrap in input and dropdown list items.
+Boolean, false by false, set true to allow word wrap in text field.
 
 __locales__
 
@@ -94,37 +96,37 @@ Hash, set custom locale texts for a single instance. If you want to set default 
 
 ## Methods
 
-__setItems__
-
-(`Array` items), set select options by json data. The original options in select element will be overwrite.
-
 __selectItem__
 
-(`String`, value), set selected option by value.
+(`String` value), set selected option by value.
+
+__unselectItem__
+
+(`String` value), remove selected option in multiple select mode.
 
 __clear__
 
-clear selected option and value of input.
+clear selected option and .
 
 __disable__
 
-Disable component, user input is not allowed.
+Disable component, cannot make changes.
 
 __enable__
 
-Enable component, user input is accepted.
+Enable component.
 
 __destroy__
 
-Destroy component, retore it to original state.
+Destroy component, restore element to original state.
 
 ## Events
 
-__select__
+__change__
 
-Triggered after some item is selected with two params: item data and item element.
+Triggered when the selection is changed with selection data as param.
 
-**clear**
+__clear__
 
 Triggered after `clear()` method is called or clear button is clicked.
 
