@@ -93,10 +93,12 @@ class SimpleSelect extends SimpleModule
       if @multiple && @input.selected
         groups = @dataProvider.excludeItems @input.selected, groups
       @popover.setGroups groups
-      @popover.setActive(!@dataProvider.remote || value)
+      @popover.setActive !!(!@dataProvider.remote || value)
 
     @dataProvider.on 'beforeFetch', (e) =>
       @popover.setLoading true
+    .on 'fetch', (e) =>
+      @popover.setLoading false
 
     # popover events
     @popover.on 'itemClick', (e, $item, item) =>

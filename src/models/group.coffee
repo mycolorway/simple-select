@@ -10,6 +10,11 @@ class Group
 
     if $.isArray(opts.items) && opts.items.length > 0
       $.each opts.items, (i, item) =>
+        if $.isArray item
+          item =
+            name: item[0]
+            value: item[1]
+            data: if item.length > 2 then item[2] else null
         @items.push new Item item
 
   filterItems: (value) ->

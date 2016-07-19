@@ -126,11 +126,6 @@ __change__
 
 Triggered when the selection is changed with selection data as param.
 
-__clear__
-
-Triggered after `clear()` method is called or clear button is clicked.
-
-
 ## Development
 
 Clone repository from github:

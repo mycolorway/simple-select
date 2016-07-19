@@ -12,7 +12,7 @@ class HtmlSelect extends SimpleModule
     @_render() if @groups
 
   _renderOption: (item, $parent = @el) ->
-    $ '<option>', $.extend
+    $ '<option>',
       text: item.name
       value: item.value
       data: item.data

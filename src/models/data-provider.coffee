@@ -23,7 +23,7 @@ class DataProvider extends SimpleModule
   _fetch: (value, callback) ->
     return if !@remote || @triggerHandler('beforeFetch') == false
 
-    onFetch = (groups) ->
+    onFetch = (groups) =>
       @setGroupsFromJson groups
       @triggerHandler 'fetch', [@groups]
       callback? @groups
@@ -67,10 +67,7 @@ class DataProvider extends SimpleModule
         $option = $ option
         value = $option.val()
         return unless value
-        items.push
-          name: $option.text()
-          value: value
-          data: $option.data()
+        items.push [$option.text(), value, $option.data()]
       items
 
     if ($groups = $select.find('optgroup')).length > 0

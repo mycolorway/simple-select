@@ -39,12 +39,13 @@ class Popover extends SimpleModule
 
   _render: ->
     @el.empty()
+    noGroup = @groups.length == 1 && @groups[0].name == Group.defaultName
 
-    if @groups.length == 0
+    if @groups.length == 0 || (noGroup && @groups[0].items.length == 0)
       $('<div class="no-results"></div>')
         .text @opts.locales.noResults
         .appendTo @el
-    else if @groups.length == 1 && @groups[0].name == Group.defaultName
+    else if noGroup
       $.each @groups[0].items, (i, item) =>
         @_renderItem item
     else
@@ -124,6 +125,7 @@ class Popover extends SimpleModule
       @el.removeClass 'loading'
       @el.find('.loading').remove()
 
+    @setActive loading
     loading
 
   setActive: (active = true) ->

@@ -171,5 +171,13 @@ $height: 24px;
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+
+    &.loading {
+      .no-results,
+      .select-item,
+      .select-group {
+        display: none;
+      }
+    }
   }
 }

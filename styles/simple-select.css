@@ -134,3 +134,7 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis; }
+    .simple-select .popover.loading .no-results,
+    .simple-select .popover.loading .select-item,
+    .simple-select .popover.loading .select-group {
+      display: none; }

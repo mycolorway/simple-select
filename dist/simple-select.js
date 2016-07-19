@@ -52,11 +52,11 @@ HtmlSelect = (function(superClass) {
     if ($parent == null) {
       $parent = this.el;
     }
-    return $('<option>', $.extend({
+    return $('<option>', {
       text: item.name,
       value: item.value,
       data: item.data
-    })).appendTo($parent);
+    }).appendTo($parent);
   };
 
   HtmlSelect.prototype._render = function() {
@@ -144,7 +144,7 @@ Input = (function(superClass) {
   };
 
   Input.prototype._render = function() {
-    this.el.append('<textarea class="text-field" rows="1" autocomplete="off"></textarea>\n<input type="text" class="text-field" />\n<a class="link-expand" href="javascript:;">\n  <i class="icon-expand"><span>&#9662;</span></i>\n</a>\n<a class="link-clear" href="javascript:;">\n  <i class="icon-remove"><span>&#10005;</span></i>\n</a>');
+    this.el.append('<textarea class="text-field" rows="1" autocomplete="off"></textarea>\n<input type="text" class="text-field" />\n<a class="link-expand" href="javascript:;" tabindex="-1">\n  <i class="icon-expand"><span>&#9662;</span></i>\n</a>\n<a class="link-clear" href="javascript:;" tabindex="-1">\n  <i class="icon-remove"><span>&#10005;</span></i>\n</a>');
     this.el.find(this.opts.noWrap ? 'textarea' : 'input:text').remove();
     this.textField = this.el.find('.text-field');
     this.textField.attr('placeholder', this.opts.placeholder);
@@ -333,11 +333,13 @@ DataProvider = (function(superClass) {
     if (!this.remote || this.triggerHandler('beforeFetch') === false) {
       return;
     }
-    onFetch = function(groups) {
-      this.setGroupsFromJson(groups);
-      this.triggerHandler('fetch', [this.groups]);
-      return typeof callback === "function" ? callback(this.groups) : void 0;
-    };
+    onFetch = (function(_this) {
+      return function(groups) {
+        _this.setGroupsFromJson(groups);
+        _this.triggerHandler('fetch', [_this.groups]);
+        return typeof callback === "function" ? callback(_this.groups) : void 0;
+      };
+    })(this);
     if (!value) {
       onFetch([]);
       return;
@@ -398,11 +400,7 @@ DataProvider = (function(superClass) {
           if (!value) {
             return;
           }
-          return items.push({
-            name: $option.text(),
-            value: value,
-            data: $option.data()
-          });
+          return items.push([$option.text(), value, $option.data()]);
         };
       })(this));
       return items;
@@ -512,6 +510,13 @@ Group = (function() {
     if ($.isArray(opts.items) && opts.items.length > 0) {
       $.each(opts.items, (function(_this) {
         return function(i, item) {
+          if ($.isArray(item)) {
+            item = {
+              name: item[0],
+              value: item[1],
+              data: item.length > 2 ? item[2] : null
+            };
+          }
           return _this.items.push(new Item(item));
         };
       })(this));
@@ -577,7 +582,7 @@ Item = (function(superClass) {
 
   function Item(opts) {
     this.name = opts.name;
-    this.value = opts.value;
+    this.value = opts.value.toString();
     this.data = {};
     if ($.isPlainObject(opts.data)) {
       $.each(opts.data, (function(_this) {
@@ -779,10 +784,12 @@ Popover = (function(superClass) {
   };
 
   Popover.prototype._render = function() {
+    var noGroup;
     this.el.empty();
-    if (this.groups.length === 0) {
+    noGroup = this.groups.length === 1 && this.groups[0].name === Group.defaultName;
+    if (this.groups.length === 0 || (noGroup && this.groups[0].items.length === 0)) {
       $('<div class="no-results"></div>').text(this.opts.locales.noResults).appendTo(this.el);
-    } else if (this.groups.length === 1 && this.groups[0].name === Group.defaultName) {
+    } else if (noGroup) {
       $.each(this.groups[0].items, (function(_this) {
         return function(i, item) {
           return _this._renderItem(item);
@@ -883,6 +890,7 @@ Popover = (function(superClass) {
       this.el.removeClass('loading');
       this.el.find('.loading').remove();
     }
+    this.setActive(loading);
     return loading;
   };
 
@@ -1018,12 +1026,16 @@ SimpleSelect = (function(superClass) {
           groups = _this.dataProvider.excludeItems(_this.input.selected, groups);
         }
         _this.popover.setGroups(groups);
-        return _this.popover.setActive(!_this.dataProvider.remote || value);
+        return _this.popover.setActive(!!(!_this.dataProvider.remote || value));
       };
     })(this));
     this.dataProvider.on('beforeFetch', (function(_this) {
       return function(e) {
         return _this.popover.setLoading(true);
+      };
+    })(this)).on('fetch', (function(_this) {
+      return function(e) {
+        return _this.popover.setLoading(false);
       };
     })(this));
     this.popover.on('itemClick', (function(_this) {

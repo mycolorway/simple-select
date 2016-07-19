@@ -2,7 +2,7 @@ class Item extends SimpleModule
 
   constructor: (opts) ->
     @name = opts.name
-    @value = opts.value
+    @value = opts.value.toString()
     @data = {}
     if $.isPlainObject opts.data
       $.each opts.data, (key, value) =>

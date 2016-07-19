@@ -19,10 +19,10 @@ class Input extends SimpleModule
     @el.append '''
       <textarea class="text-field" rows="1" autocomplete="off"></textarea>
       <input type="text" class="text-field" />
-      <a class="link-expand" href="javascript:;">
+      <a class="link-expand" href="javascript:;" tabindex="-1">
         <i class="icon-expand"><span>&#9662;</span></i>
       </a>
-      <a class="link-clear" href="javascript:;">
+      <a class="link-clear" href="javascript:;" tabindex="-1">
         <i class="icon-remove"><span>&#10005;</span></i>
       </a>
     '''
