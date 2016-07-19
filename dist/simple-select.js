@@ -677,11 +677,12 @@ MultipleInput = (function(superClass) {
 
   MultipleInput.prototype._bind = function() {
     MultipleInput.__super__._bind.call(this);
-    return this.el.on('click', '.selected-item', (function(_this) {
+    return this.el.on('mousedown', '.selected-item', (function(_this) {
       return function(e) {
         var $item;
         $item = $(e.currentTarget);
-        return _this.triggerHandler('itemClick', [$item, $item.data('item')]);
+        _this.triggerHandler('itemClick', [$item, $item.data('item')]);
+        return false;
       };
     })(this));
   };

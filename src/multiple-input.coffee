@@ -31,9 +31,10 @@ class MultipleInput extends Input
   _bind: ->
     super()
 
-    @el.on 'click', '.selected-item', (e) =>
+    @el.on 'mousedown', '.selected-item', (e) =>
       $item = $ e.currentTarget
       @triggerHandler 'itemClick', [$item, $item.data('item')]
+      false
 
   _onBackspacePress: (e) ->
     unless @getValue()

@@ -55,12 +55,12 @@
     border: 1px solid #dfdfdf; }
     .simple-select .input.multiple .text-field {
       width: 40%;
-      height: 20px;
+      height: 16px;
       line-height: 16px;
       flex: 1 0 auto;
       border: none;
       padding: 0;
-      margin: 0 0 2px 0; }
+      margin: 0 0 4px 0; }
     .simple-select .input.multiple .selected-item {
       background: #dfdfdf;
       display: block;
