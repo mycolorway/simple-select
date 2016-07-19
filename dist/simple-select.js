@@ -318,9 +318,8 @@ DataProvider = (function(superClass) {
   };
 
   DataProvider.prototype._init = function() {
-    if (this.opts.remote) {
-      this.remote = this.opts.remote;
-    } else if (this.opts.groups) {
+    this.remote = this.opts.remote;
+    if (this.opts.groups) {
       this.setGroupsFromJson(this.opts.groups);
     } else if (this.opts.selectEl) {
       this.setGroupsFromHtml(this.opts.selectEl);
@@ -677,6 +676,12 @@ MultipleInput = (function(superClass) {
 
   MultipleInput.prototype._bind = function() {
     MultipleInput.__super__._bind.call(this);
+    this.el.on('mousedown', (function(_this) {
+      return function(e) {
+        _this.textField.focus();
+        return false;
+      };
+    })(this));
     return this.el.on('mousedown', '.selected-item', (function(_this) {
       return function(e) {
         var $item;
@@ -690,7 +695,7 @@ MultipleInput = (function(superClass) {
   MultipleInput.prototype._onBackspacePress = function(e) {
     if (!this.getValue()) {
       e.preventDefault();
-      return this.el.find('.selected-item:last').click();
+      return this.el.find('.selected-item:last').mousedown();
     }
   };
 
@@ -727,6 +732,9 @@ MultipleInput = (function(superClass) {
     if (!(item instanceof Item)) {
       item = this.dataProvider.getItem(item);
     }
+    if (!item) {
+      return;
+    }
     this.selected || (this.selected = []);
     this.selected.push(item);
     $item = $(MultipleInput._itemTpl).attr('data-value', item.value).data('item', item);
@@ -740,6 +748,9 @@ MultipleInput = (function(superClass) {
   MultipleInput.prototype.removeSelected = function(item) {
     if (!(item instanceof Item)) {
       item = this.dataProvider.getItem(item);
+    }
+    if (!item) {
+      return;
     }
     if (this.selected) {
       $.each(this.selected, (function(_this) {

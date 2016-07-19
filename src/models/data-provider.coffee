@@ -11,9 +11,9 @@ class DataProvider extends SimpleModule
     selectEl: null
 
   _init: ->
-    if @opts.remote
-      @remote = @opts.remote
-    else if @opts.groups
+    @remote = @opts.remote
+
+    if @opts.groups
       @setGroupsFromJson @opts.groups
     else if @opts.selectEl
       @setGroupsFromHtml @opts.selectEl

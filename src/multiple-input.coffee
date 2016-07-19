@@ -31,6 +31,10 @@ class MultipleInput extends Input
   _bind: ->
     super()
 
+    @el.on 'mousedown', (e) =>
+      @textField.focus()
+      false
+
     @el.on 'mousedown', '.selected-item', (e) =>
       $item = $ e.currentTarget
       @triggerHandler 'itemClick', [$item, $item.data('item')]
@@ -39,7 +43,7 @@ class MultipleInput extends Input
   _onBackspacePress: (e) ->
     unless @getValue()
       e.preventDefault()
-      @el.find('.selected-item:last').click()
+      @el.find('.selected-item:last').mousedown()
 
   _onInputChange: ->
     @triggerHandler 'change', [@getValue()]
@@ -62,6 +66,7 @@ class MultipleInput extends Input
   addSelected: (item) ->
     unless item instanceof Item
       item = @dataProvider.getItem item
+    return unless item
 
     @selected ||= []
     @selected.push item
@@ -78,6 +83,7 @@ class MultipleInput extends Input
   removeSelected: (item) ->
     unless item instanceof Item
       item = @dataProvider.getItem item
+    return unless item
 
     if @selected
       $.each @selected, (i, _item) =>
