@@ -60,21 +60,22 @@ class SimpleSelect extends SimpleModule
         el: @wrapper.find('.input')
         placeholder: placeholder
         selected: @htmlSelect.getValue()
+      groups = @dataProvider.excludeItems @input.selected
     else
       @input = new Input
         el: @wrapper.find('.input')
         placeholder: placeholder
         noWrap: @opts.noWrap
         selected: @htmlSelect.getValue()
+      groups = @dataProvider.groups
 
     @popover = new Popover
       el: @wrapper.find('.popover')
-      groups: @dataProvider.getGroups()
+      groups: groups
       onItemRender: @opts.onItemRender
       locales: @locales
 
     @_bind()
-    @_setPopoverPosition()
     @disable() if @el.prop('disabled')
 
   _render: ->
@@ -101,6 +102,9 @@ class SimpleSelect extends SimpleModule
     # popover events
     @popover.on 'itemClick', (e, $item, item) =>
       @selectItem item
+
+    @popover.on 'show', (e) =>
+      @_setPopoverPosition()
 
     # input events
     @input.on 'itemClick', (e, $item, item) =>

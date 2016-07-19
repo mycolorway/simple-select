@@ -665,7 +665,13 @@ MultipleInput = (function(superClass) {
     this.el.append('<textarea class="text-field" rows="1" autocomplete="off"></textarea>').addClass('multiple');
     this.textField = this.el.find('textarea');
     this.textField.attr('placeholder', this.opts.placeholder);
-    this.setSelected(this.opts.selected);
+    if ($.isArray(this.opts.selected)) {
+      $.each(this.opts.selected, (function(_this) {
+        return function(i, item) {
+          return _this.addSelected(item);
+        };
+      })(this));
+    }
     return this.el;
   };
 
@@ -693,6 +699,17 @@ MultipleInput = (function(superClass) {
 
   MultipleInput.prototype._autoresize = function() {};
 
+  MultipleInput.prototype._setPlaceholder = function(show) {
+    if (show == null) {
+      show = true;
+    }
+    if (show) {
+      return this.textField.attr('placeholder', this.opts.placeholder);
+    } else {
+      return this.textField.removeAttr('placeholder');
+    }
+  };
+
   MultipleInput.prototype.setSelected = function(item) {
     if (item == null) {
       item = false;
@@ -715,6 +732,7 @@ MultipleInput = (function(superClass) {
     $item.find('.item-label').text(item.name);
     $item.insertBefore(this.textField);
     this.setValue('');
+    this._setPlaceholder(false);
     return item;
   };
 
@@ -733,6 +751,7 @@ MultipleInput = (function(superClass) {
       })(this));
       if (this.selected.length === 0) {
         this.selected = false;
+        this._setPlaceholder(true);
       }
     }
     this.el.find(".selected-item[data-value='" + item.value + "']").remove();
@@ -743,8 +762,8 @@ MultipleInput = (function(superClass) {
   MultipleInput.prototype.clear = function() {
     this.setValue('');
     this.selected = false;
-    this.el.find('.selected-item').remove();
-    return this.triggerHandler('clear');
+    this._setPlaceholder(true);
+    return this.el.find('.selected-item').remove();
   };
 
   return MultipleInput;
@@ -920,6 +939,9 @@ Popover = (function(superClass) {
     this.el.toggleClass('active', active);
     if (active) {
       this._scrollToHighlighted();
+      this.triggerHandler('show');
+    } else {
+      this.triggerHandler('hide');
     }
     return active;
   };
@@ -982,7 +1004,7 @@ SimpleSelect = (function(superClass) {
   SimpleSelect._tpl = "<div class=\"simple-select\">\n  <div class=\"input\"></div>\n  <div class=\"popover\"></div>\n</div>";
 
   SimpleSelect.prototype._init = function() {
-    var $blankOption, placeholder, ref;
+    var $blankOption, groups, placeholder, ref;
     this.el = $(this.opts.el);
     if (!(this.el.length > 0)) {
       throw new Error("simple select: option el is required");
@@ -1008,6 +1030,7 @@ SimpleSelect = (function(superClass) {
         placeholder: placeholder,
         selected: this.htmlSelect.getValue()
       });
+      groups = this.dataProvider.excludeItems(this.input.selected);
     } else {
       this.input = new Input({
         el: this.wrapper.find('.input'),
@@ -1015,15 +1038,15 @@ SimpleSelect = (function(superClass) {
         noWrap: this.opts.noWrap,
         selected: this.htmlSelect.getValue()
       });
+      groups = this.dataProvider.groups;
     }
     this.popover = new Popover({
       el: this.wrapper.find('.popover'),
-      groups: this.dataProvider.getGroups(),
+      groups: groups,
       onItemRender: this.opts.onItemRender,
       locales: this.locales
     });
     this._bind();
-    this._setPopoverPosition();
     if (this.el.prop('disabled')) {
       return this.disable();
     }
@@ -1056,6 +1079,11 @@ SimpleSelect = (function(superClass) {
     this.popover.on('itemClick', (function(_this) {
       return function(e, $item, item) {
         return _this.selectItem(item);
+      };
+    })(this));
+    this.popover.on('show', (function(_this) {
+      return function(e) {
+        return _this._setPopoverPosition();
       };
     })(this));
     this.input.on('itemClick', (function(_this) {

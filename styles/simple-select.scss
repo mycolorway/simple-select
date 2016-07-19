@@ -96,9 +96,9 @@ $height: 24px;
       }
     }
 
-    .selected-item + input::-webkit-input-placeholder,
-    .selected-item + input::-moz-placeholder,
-    .selected-item + input:-ms-input-placeholder {
+    .selected-item + .text-field::-webkit-input-placeholder,
+    .selected-item + .text-field::-moz-placeholder,
+    .selected-item + .text-field:-ms-input-placeholder {
       color: transparent;
     }
   }

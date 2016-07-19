@@ -78,9 +78,9 @@
         font-style: normal;
         color: #777;
         margin: 0 0 0 2px; }
-    .simple-select .input.multiple .selected-item + input::-webkit-input-placeholder,
-    .simple-select .input.multiple .selected-item + input::-moz-placeholder,
-    .simple-select .input.multiple .selected-item + input:-ms-input-placeholder {
+    .simple-select .input.multiple .selected-item + .text-field::-webkit-input-placeholder,
+    .simple-select .input.multiple .selected-item + .text-field::-moz-placeholder,
+    .simple-select .input.multiple .selected-item + .text-field:-ms-input-placeholder {
       color: transparent; }
   .simple-select .popover {
     display: none;

@@ -129,7 +129,11 @@ class Popover extends SimpleModule
   setActive: (active = true) ->
     @active = active
     @el.toggleClass 'active', active
-    @_scrollToHighlighted() if active
+    if active
+      @_scrollToHighlighted()
+      @triggerHandler 'show'
+    else
+      @triggerHandler 'hide'
     active
 
   setPosition: (position) ->

@@ -23,7 +23,9 @@ class MultipleInput extends Input
 
     @textField = @el.find 'textarea'
     @textField.attr 'placeholder', @opts.placeholder
-    @setSelected @opts.selected
+    if $.isArray @opts.selected
+      $.each @opts.selected, (i, item) =>
+        @addSelected item
     @el
 
   _bind: ->
@@ -39,11 +41,16 @@ class MultipleInput extends Input
       @el.find('.selected-item:last').click()
 
   _onInputChange: ->
-    # @_autoresize()
     @triggerHandler 'change', [@getValue()]
 
   _autoresize: ->
     # do nothing
+
+  _setPlaceholder: (show = true) ->
+    if show
+      @textField.attr 'placeholder', @opts.placeholder
+    else
+      @textField.removeAttr 'placeholder'
 
   setSelected: (item = false) ->
     if item
@@ -64,6 +71,7 @@ class MultipleInput extends Input
     $item.find('.item-label').text(item.name)
     $item.insertBefore @textField
     @setValue ''
+    @_setPlaceholder false
     item
 
   removeSelected: (item) ->
@@ -75,7 +83,9 @@ class MultipleInput extends Input
         if _item.value == item.value
           @selected.splice(i, 1)
           false
-      @selected = false if @selected.length == 0
+      if @selected.length == 0
+        @selected = false
+        @_setPlaceholder true
 
     @el.find(".selected-item[data-value='#{item.value}']").remove()
     @setValue ''
@@ -84,7 +94,7 @@ class MultipleInput extends Input
   clear: ->
     @setValue ''
     @selected = false
+    @_setPlaceholder true
     @el.find('.selected-item').remove()
-    @triggerHandler 'clear'
 
 module.exports = MultipleInput
