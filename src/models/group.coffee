@@ -39,4 +39,11 @@ class Group
       false if result
     result
 
+  getItemByName: (name) ->
+    result = null
+    $.each @items, (i, item) ->
+      result = item if item.name == name
+      false if result
+    result
+
 module.exports = Group

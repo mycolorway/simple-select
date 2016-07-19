@@ -87,7 +87,7 @@ false/Selector/Element/jQuery Object, false by default, set an `input:text` elem
 
 __noWrap__
 
-Boolean, false by false, set true to allow word wrap in text field.
+Boolean, false by default, set true to allow word wrap in text field.
 
 __locales__
 

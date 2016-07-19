@@ -12,6 +12,7 @@ $height: 24px;
       padding: 4px;
       padding-right: $height;
       resize: none;
+      overflow: hidden;
       outline: none;
     }
 
@@ -19,7 +20,7 @@ $height: 24px;
     .link-expand {
       display: block;
       width: $height;
-      height: $height;
+      height: auto;
       line-height: $height;
       text-align: center;
       font-size: 14px;
@@ -28,6 +29,7 @@ $height: 24px;
       position: absolute;
       top: 0;
       right: 0;
+      bottom: 0;
 
       &:hover {
         opacity: 0.8;

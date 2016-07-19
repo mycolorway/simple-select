@@ -18,12 +18,13 @@
     padding: 4px;
     padding-right: 24px;
     resize: none;
+    overflow: hidden;
     outline: none; }
   .simple-select .input .link-clear,
   .simple-select .input .link-expand {
     display: block;
     width: 24px;
-    height: 24px;
+    height: auto;
     line-height: 24px;
     text-align: center;
     font-size: 14px;
@@ -31,7 +32,8 @@
     text-decoration: none;
     position: absolute;
     top: 0;
-    right: 0; }
+    right: 0;
+    bottom: 0; }
     .simple-select .input .link-clear:hover,
     .simple-select .input .link-expand:hover {
       opacity: 0.8; }

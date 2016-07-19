@@ -71,8 +71,6 @@ class SimpleSelect extends SimpleModule
       el: @wrapper.find('.popover')
       groups: @dataProvider.getGroups()
       onItemRender: @opts.onItemRender
-      position:
-        top: @input.el.outerHeight() + 2
       locales: @locales
 
     @_bind()
@@ -142,7 +140,11 @@ class SimpleSelect extends SimpleModule
 
     @input.on 'blur', (e) =>
       if !@multiple && !@input.selected
-        @_setUserInput()
+        value = @input.getValue()
+        if item = @dataProvider.getItemByName(value)
+          @selectItem item
+        else
+          @_setUserInput value
       @popover.setActive false
 
   _setUserInput: (value = @input.getValue()) ->

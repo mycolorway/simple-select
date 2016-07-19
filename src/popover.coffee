@@ -14,7 +14,6 @@ class Popover extends SimpleModule
   opts:
     el: null
     groups: []
-    position: null
     onItemRender: null
     localse: {}
 
@@ -56,7 +55,6 @@ class Popover extends SimpleModule
         $.each group.items, (i, item) =>
           @_renderItem item
 
-    @setPosition @opts.position
     @highlightNextItem()
     @el
 
@@ -136,6 +134,6 @@ class Popover extends SimpleModule
 
   setPosition: (position) ->
     @el.css(position) if position
-    position
+    @
 
 module.exports = Popover

@@ -37,7 +37,7 @@ class DataProvider extends SimpleModule
       data: $.extend {}, @remote.params,
         "#{@remote.searchKey}": value
       dataType: 'json'
-    .done (groups) =>
+    .done (groups) ->
       onFetch groups
 
   setGroupsFromJson: (groups) ->
@@ -63,7 +63,7 @@ class DataProvider extends SimpleModule
     @groups = []
     itemsFromOptions = ($options) ->
       items = []
-      $options.each (i, option) =>
+      $options.each (i, option) ->
         $option = $ option
         value = $option.val()
         return unless value
@@ -88,8 +88,15 @@ class DataProvider extends SimpleModule
 
   getItem: (value) ->
     result = null
-    $.each @groups, (i, group) =>
+    $.each @groups, (i, group) ->
       result = group.getItem value
+      false if result
+    result
+
+  getItemByName: (name) ->
+    result = null
+    $.each @groups, (i, group) ->
+      result = group.getItemByName name
       false if result
     result
 

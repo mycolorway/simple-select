@@ -352,11 +352,9 @@ DataProvider = (function(superClass) {
         obj
       )),
       dataType: 'json'
-    }).done((function(_this) {
-      return function(groups) {
-        return onFetch(groups);
-      };
-    })(this));
+    }).done(function(groups) {
+      return onFetch(groups);
+    });
   };
 
   DataProvider.prototype.setGroupsFromJson = function(groups) {
@@ -392,17 +390,15 @@ DataProvider = (function(superClass) {
     itemsFromOptions = function($options) {
       var items;
       items = [];
-      $options.each((function(_this) {
-        return function(i, option) {
-          var $option, value;
-          $option = $(option);
-          value = $option.val();
-          if (!value) {
-            return;
-          }
-          return items.push([$option.text(), value, $option.data()]);
-        };
-      })(this));
+      $options.each(function(i, option) {
+        var $option, value;
+        $option = $(option);
+        value = $option.val();
+        if (!value) {
+          return;
+        }
+        return items.push([$option.text(), value, $option.data()]);
+      });
       return items;
     };
     if (($groups = $select.find('optgroup')).length > 0) {
@@ -432,14 +428,24 @@ DataProvider = (function(superClass) {
   DataProvider.prototype.getItem = function(value) {
     var result;
     result = null;
-    $.each(this.groups, (function(_this) {
-      return function(i, group) {
-        result = group.getItem(value);
-        if (result) {
-          return false;
-        }
-      };
-    })(this));
+    $.each(this.groups, function(i, group) {
+      result = group.getItem(value);
+      if (result) {
+        return false;
+      }
+    });
+    return result;
+  };
+
+  DataProvider.prototype.getItemByName = function(name) {
+    var result;
+    result = null;
+    $.each(this.groups, function(i, group) {
+      result = group.getItemByName(name);
+      if (result) {
+        return false;
+      }
+    });
     return result;
   };
 
@@ -557,6 +563,20 @@ Group = (function() {
     result = null;
     $.each(this.items, function(i, item) {
       if (item.value === value) {
+        result = item;
+      }
+      if (result) {
+        return false;
+      }
+    });
+    return result;
+  };
+
+  Group.prototype.getItemByName = function(name) {
+    var result;
+    result = null;
+    $.each(this.items, function(i, item) {
+      if (item.name === name) {
         result = item;
       }
       if (result) {
@@ -756,7 +776,6 @@ Popover = (function(superClass) {
   Popover.prototype.opts = {
     el: null,
     groups: [],
-    position: null,
     onItemRender: null,
     localse: {}
   };
@@ -805,7 +824,6 @@ Popover = (function(superClass) {
         };
       })(this));
     }
-    this.setPosition(this.opts.position);
     this.highlightNextItem();
     return this.el;
   };
@@ -910,7 +928,7 @@ Popover = (function(superClass) {
     if (position) {
       this.el.css(position);
     }
-    return position;
+    return this;
   };
 
   return Popover;
@@ -1002,9 +1020,6 @@ SimpleSelect = (function(superClass) {
       el: this.wrapper.find('.popover'),
       groups: this.dataProvider.getGroups(),
       onItemRender: this.opts.onItemRender,
-      position: {
-        top: this.input.el.outerHeight() + 2
-      },
       locales: this.locales
     });
     this._bind();
@@ -1102,8 +1117,14 @@ SimpleSelect = (function(superClass) {
     })(this));
     return this.input.on('blur', (function(_this) {
       return function(e) {
+        var item, value;
         if (!_this.multiple && !_this.input.selected) {
-          _this._setUserInput();
+          value = _this.input.getValue();
+          if (item = _this.dataProvider.getItemByName(value)) {
+            _this.selectItem(item);
+          } else {
+            _this._setUserInput(value);
+          }
         }
         return _this.popover.setActive(false);
       };
