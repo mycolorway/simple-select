@@ -53,7 +53,7 @@ class SimpleSelect extends SimpleModule
     else if ($blankOption = @htmlSelect.getBlankOption())
       $blankOption.text()
     else
-      false
+      ''
 
     if @multiple
       @input = new MultipleInput

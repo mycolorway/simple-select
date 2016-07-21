@@ -12,6 +12,7 @@ class Item extends SimpleModule
           # capitalize
           key[i] = part.charAt(0).toUpperCase() + part.slice(1) if i > 0
         @data[key.join()] = value
+        null
 
   match: (value) ->
     try
