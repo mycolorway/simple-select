@@ -61,12 +61,18 @@ HtmlSelect = (function(superClass) {
 
   HtmlSelect.prototype._render = function() {
     this.el.empty();
-    if (this.groups.length === 1 && this.groups[0].name === Group.defaultName) {
-      $.each(this.groups[0].items, (function(_this) {
-        return function(i, item) {
-          return _this._renderOption(item);
-        };
-      })(this));
+    if (this.groups.length === 0) {
+      this.el.append('<option>');
+    } else if (this.groups.length === 1 && this.groups[0].name === Group.defaultName) {
+      if (this.groups[0].items.length === 0) {
+        this.el.append('<option>');
+      } else {
+        $.each(this.groups[0].items, (function(_this) {
+          return function(i, item) {
+            return _this._renderOption(item);
+          };
+        })(this));
+      }
     } else {
       $.each(this.groups, (function(_this) {
         return function(i, group) {
@@ -1201,9 +1207,13 @@ SimpleSelect = (function(superClass) {
       });
       this.htmlSelect.setGroups([group]);
     }
-    return this.htmlSelect.setValue(items.map(function(item) {
-      return item.value;
-    }));
+    if (items.length > 0) {
+      return this.htmlSelect.setValue(items.map(function(item) {
+        return item.value;
+      }));
+    } else {
+      return this.htmlSelect.setValue('');
+    }
   };
 
   SimpleSelect.prototype.selectItem = function(item) {

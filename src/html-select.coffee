@@ -21,9 +21,14 @@ class HtmlSelect extends SimpleModule
   _render: ->
     @el.empty()
 
-    if @groups.length == 1 && @groups[0].name == Group.defaultName
-      $.each @groups[0].items, (i, item) =>
-        @_renderOption item
+    if @groups.length == 0
+      @el.append '<option>'
+    else if @groups.length == 1 && @groups[0].name == Group.defaultName
+      if @groups[0].items.length == 0
+        @el.append '<option>'
+      else
+        $.each @groups[0].items, (i, item) =>
+          @_renderOption item
     else
       $.each @groups, (i, group) =>
         $group = $ "<optgroup>",

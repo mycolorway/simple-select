@@ -171,7 +171,10 @@ class SimpleSelect extends SimpleModule
         items: items
       @htmlSelect.setGroups [group]
 
-    @htmlSelect.setValue items.map (item) -> item.value
+    if items.length > 0
+      @htmlSelect.setValue items.map (item) -> item.value
+    else
+      @htmlSelect.setValue ''
 
   selectItem: (item) ->
     unless item instanceof Item
