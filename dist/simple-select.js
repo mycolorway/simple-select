@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mycolorway.github.io/simple-select/license.html
  *
- * Date: 2016-07-21
+ * Date: 2016-07-22
  */
 ;(function(root, factory) {
   if (typeof module === 'object' && module.exports) {
@@ -159,6 +159,12 @@ Input = (function(superClass) {
   };
 
   Input.prototype._bind = function() {
+    this.el.on('mousedown', (function(_this) {
+      return function(e) {
+        _this.textField.focus();
+        return false;
+      };
+    })(this));
     this.el.find(".link-expand").on("mousedown", (function(_this) {
       return function(e) {
         if (_this.disabled) {
@@ -263,6 +269,7 @@ Input = (function(superClass) {
         selected = this.dataProvider.getItem(selected);
       }
       this.textField.val(selected.name);
+      this._autoresize();
       this.el.addClass('selected');
     } else {
       this.el.removeClass('selected');
@@ -683,12 +690,6 @@ MultipleInput = (function(superClass) {
 
   MultipleInput.prototype._bind = function() {
     MultipleInput.__super__._bind.call(this);
-    this.el.on('mousedown', (function(_this) {
-      return function(e) {
-        _this.textField.focus();
-        return false;
-      };
-    })(this));
     return this.el.on('mousedown', '.selected-item', (function(_this) {
       return function(e) {
         var $item;
@@ -862,7 +863,6 @@ Popover = (function(superClass) {
         };
       })(this));
     }
-    this.highlightNextItem();
     return this.el;
   };
 
@@ -886,8 +886,10 @@ Popover = (function(superClass) {
   };
 
   Popover.prototype.setGroups = function(groups) {
+    this.setHighlighted(false);
+    this.setLoading(false);
+    this.setActive(false);
     this.groups = groups;
-    this.highlighted = false;
     this._render();
     return groups;
   };
@@ -1102,7 +1104,14 @@ SimpleSelect = (function(superClass) {
     })(this));
     this.popover.on('show', (function(_this) {
       return function(e) {
-        return _this._setPopoverPosition();
+        _this._setPopoverPosition();
+        if (!_this.multiple) {
+          if (_this.input.selected) {
+            return _this.popover.setHighlighted(_this.input.selected);
+          } else {
+            return _this.popover.highlightNextItem();
+          }
+        }
       };
     })(this));
     this.input.on('itemClick', (function(_this) {
@@ -1195,11 +1204,15 @@ SimpleSelect = (function(superClass) {
   };
 
   SimpleSelect.prototype._syncValue = function() {
-    var group, items;
+    var currentValue, group, items, values;
     if (this.multiple) {
       items = this.input.selected || [];
     } else {
       items = this.input.selected ? [this.input.selected] : [];
+    }
+    currentValue = this.htmlSelect.getValue() || [];
+    if (!$.isArray(currentValue)) {
+      currentValue = [currentValue];
     }
     if (this.dataProvider.remote) {
       group = new Group({
@@ -1207,13 +1220,18 @@ SimpleSelect = (function(superClass) {
       });
       this.htmlSelect.setGroups([group]);
     }
+    values = items.map(function(item) {
+      return item.value;
+    });
     if (items.length > 0) {
-      return this.htmlSelect.setValue(items.map(function(item) {
-        return item.value;
-      }));
+      this.htmlSelect.setValue(values);
     } else {
-      return this.htmlSelect.setValue('');
+      this.htmlSelect.setValue('');
     }
+    if (currentValue.join(',') !== values.join(',')) {
+      this.triggerHandler('change', [this.input.selected]);
+    }
+    return items;
   };
 
   SimpleSelect.prototype.selectItem = function(item) {
@@ -1237,7 +1255,6 @@ SimpleSelect = (function(superClass) {
     }
     this._setUserInput('');
     this._syncValue();
-    this.triggerHandler('change', [this.input.selected]);
     return item;
   };
 
@@ -1253,7 +1270,6 @@ SimpleSelect = (function(superClass) {
     }
     this.input.removeSelected(item);
     this._syncValue();
-    this.triggerHandler('change', [this.input.selected]);
     return item;
   };
 
@@ -1261,7 +1277,6 @@ SimpleSelect = (function(superClass) {
     this.input.clear();
     this.popover.setActive(false);
     this._setUserInput('');
-    this.triggerHandler('change', [this.input.selected]);
     return this;
   };
 

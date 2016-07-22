@@ -31,10 +31,6 @@ class MultipleInput extends Input
   _bind: ->
     super()
 
-    @el.on 'mousedown', (e) =>
-      @textField.focus()
-      false
-
     @el.on 'mousedown', '.selected-item', (e) =>
       $item = $ e.currentTarget
       @triggerHandler 'itemClick', [$item, $item.data('item')]

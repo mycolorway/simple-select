@@ -105,6 +105,11 @@ class SimpleSelect extends SimpleModule
 
     @popover.on 'show', (e) =>
       @_setPopoverPosition()
+      unless @multiple
+        if @input.selected
+          @popover.setHighlighted @input.selected
+        else
+          @popover.highlightNextItem()
 
     # input events
     @input.on 'itemClick', (e, $item, item) =>
@@ -166,15 +171,23 @@ class SimpleSelect extends SimpleModule
     else
       items = if @input.selected then [@input.selected] else []
 
+    currentValue = @htmlSelect.getValue() || []
+    currentValue = [currentValue] unless $.isArray currentValue
+
     if @dataProvider.remote
       group = new Group
         items: items
       @htmlSelect.setGroups [group]
 
+    values = items.map (item) -> item.value
     if items.length > 0
-      @htmlSelect.setValue items.map (item) -> item.value
+      @htmlSelect.setValue values
     else
       @htmlSelect.setValue ''
+
+    unless currentValue.join(',') == values.join(',')
+      @triggerHandler 'change', [@input.selected]
+    items
 
   selectItem: (item) ->
     unless item instanceof Item
@@ -196,7 +209,6 @@ class SimpleSelect extends SimpleModule
 
     @_setUserInput ''
     @_syncValue()
-    @triggerHandler 'change', [@input.selected]
     item
 
   unselectItem: (item) ->
@@ -207,14 +219,12 @@ class SimpleSelect extends SimpleModule
 
     @input.removeSelected item
     @_syncValue()
-    @triggerHandler 'change', [@input.selected]
     item
 
   clear: ->
     @input.clear()
     @popover.setActive false
     @_setUserInput ''
-    @triggerHandler 'change', [@input.selected]
     @
 
   focus: ->

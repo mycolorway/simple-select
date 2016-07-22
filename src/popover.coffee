@@ -55,7 +55,6 @@ class Popover extends SimpleModule
         $.each group.items, (i, item) =>
           @_renderItem item
 
-    @highlightNextItem()
     @el
 
   _bind: ->
@@ -70,8 +69,10 @@ class Popover extends SimpleModule
       @el.scrollTop $item.position().top
 
   setGroups: (groups) ->
+    @setHighlighted false
+    @setLoading false
+    @setActive false
     @groups = groups
-    @highlighted = false
     @_render()
     groups
 

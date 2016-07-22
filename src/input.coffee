@@ -34,6 +34,10 @@ class Input extends SimpleModule
     @el
 
   _bind: ->
+    @el.on 'mousedown', (e) =>
+      @textField.focus()
+      false
+
     @el.find(".link-expand").on "mousedown", (e) =>
       return if @disabled
       @focus() unless @focused
@@ -106,6 +110,7 @@ class Input extends SimpleModule
       unless selected instanceof Item
         selected = @dataProvider.getItem selected
       @textField.val selected.name
+      @_autoresize()
       @el.addClass 'selected'
     else
       @el.removeClass 'selected'
