@@ -105,11 +105,10 @@ class SimpleSelect extends SimpleModule
 
     @popover.on 'show', (e) =>
       @_setPopoverPosition()
-      unless @multiple
-        if @input.selected
-          @popover.setHighlighted @input.selected
-        else
-          @popover.highlightNextItem()
+      if !@multiple && @input.selected
+        @popover.setHighlighted @input.selected
+      else
+        @popover.highlightNextItem()
 
     # input events
     @input.on 'itemClick', (e, $item, item) =>

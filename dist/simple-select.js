@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mycolorway.github.io/simple-select/license.html
  *
- * Date: 2016-07-22
+ * Date: 2016-07-25
  */
 ;(function(root, factory) {
   if (typeof module === 'object' && module.exports) {
@@ -1105,12 +1105,10 @@ SimpleSelect = (function(superClass) {
     this.popover.on('show', (function(_this) {
       return function(e) {
         _this._setPopoverPosition();
-        if (!_this.multiple) {
-          if (_this.input.selected) {
-            return _this.popover.setHighlighted(_this.input.selected);
-          } else {
-            return _this.popover.highlightNextItem();
-          }
+        if (!_this.multiple && _this.input.selected) {
+          return _this.popover.setHighlighted(_this.input.selected);
+        } else {
+          return _this.popover.highlightNextItem();
         }
       };
     })(this));
