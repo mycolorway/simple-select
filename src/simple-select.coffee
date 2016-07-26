@@ -157,7 +157,7 @@ class SimpleSelect extends SimpleModule
 
   _setUserInput: (value = @input.getValue()) ->
     if @opts.allowInput && !@multiple
-      $(@opts.allowInput).val value
+      @wrapper.siblings(@opts.allowInput).val value
 
   _setPopoverPosition: ->
     @popover.setPosition
