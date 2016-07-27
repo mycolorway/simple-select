@@ -20,7 +20,7 @@ class Item extends SimpleModule
     catch e
       re = new RegExp("", "i")
 
-    filterKey = @data.searchKey || @name
+    filterKey = @data.key || @name
     re.test filterKey
 
 module.exports = Item

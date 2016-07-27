@@ -7,7 +7,7 @@ module.exports = (config) ->
 
     # frameworks to use
     # available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['coffee-coverage', 'browserify', 'mocha', 'chai']
+    frameworks: ['coffee-coverage', 'browserify', 'mocha', 'chai', 'sinon']
 
 
     # list of files / patterns to load in the browser
@@ -16,7 +16,7 @@ module.exports = (config) ->
       'node_modules/simple-module/lib/module.js'
       'test/coverage-init.js'
       'src/simple-select.coffee'
-      'test/simple-select.coffee'
+      'test/**/*.coffee'
     ]
 
 
@@ -29,7 +29,7 @@ module.exports = (config) ->
     # available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors:
       'src/simple-select.coffee': ['browserify']
-      'test/simple-select.coffee': ['browserify']
+      'test/**/*.coffee': ['browserify']
 
 
     browserify:

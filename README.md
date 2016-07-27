@@ -83,7 +83,7 @@ String, set placeholder for input element. The default placeholder is the text o
 
 __allowInput__
 
-false/Selector/Element/jQuery Object, false by default, set an `input:text` element to allow submit custom value outside select options.
+false/Selector/Element/jQuery Object, false by default, set an `input:text` element to allow submit custom value outside select options. If you pass a selector, the `allowInput` element need be sibling of select element.
 
 __noWrap__
 
