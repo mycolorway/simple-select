@@ -1,28 +1,70 @@
 {
   "name": "simple-select",
-  "version": "2.0.14",
-  "description": "a simple select plugin based on Simple Module",
-  "main": "lib/select.js",
+  "githubOwner": "mycolorway",
+  "version": "2.1.0",
+  "description": "Autocomplete select component",
+  "homepage": "http://mycolorway.github.io/simple-select",
   "repository": {
     "type": "git",
-    "url": "git@github.com:mycolorway/simple-select.git"
+    "url": "https://github.com/mycolorway/simple-select.git"
   },
-  "author": "kshift",
+  "author": "farthinker",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mycolorway/simple-select/issues"
   },
-  "homepage": "https://github.com/mycolorway/simple-select",
+  "main": "dist/simple-select.js",
+  "scripts": {
+    "start": "gulp",
+    "test": "gulp test"
+  },
+  "umd": {
+    "name": "SimpleSelect",
+    "dependencies": {
+      "cjs": [
+        "jquery",
+        "simple-module"
+      ],
+      "global": [
+        "jQuery",
+        "SimpleModule"
+      ],
+      "params": [
+        "$",
+        "SimpleModule"
+      ]
+    }
+  },
   "dependencies": {
-    "jquery": "2.x",
-    "simple-module": "~2.0.5"
+    "jquery": "~2.2.4",
+    "simple-module": "~2.0.6"
   },
   "devDependencies": {
-    "grunt": "0.x",
-    "grunt-contrib-watch": "0.x",
-    "grunt-contrib-coffee": "0.x",
-    "grunt-contrib-sass": "0.x",
-    "grunt-contrib-jasmine": "0.x",
-    "grunt-umd": "2.x"
+    "browserify": "^13.0.0",
+    "browserify-coffee-coverage": "^1.1.1",
+    "chai": "^3.5.0",
+    "coffee-script": "^1.10.0",
+    "coffeelint": "^1.15.0",
+    "coveralls": "^2.11.8",
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-util": "^3.0.7",
+    "istanbul": "^0.4.2",
+    "karma": "^1.1.1",
+    "karma-browserify": "^5.0.5",
+    "karma-chai": "^0.1.0",
+    "karma-coffee-coverage": "^1.1.2",
+    "karma-coverage": "^1.0.0",
+    "karma-mocha": "^1.0.1",
+    "karma-mocha-reporter": "^2.0.4",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-sinon": "^1.0.5",
+    "lodash": "^4.13.1",
+    "mocha": "^2.5.3",
+    "node-sass": "^3.8.0",
+    "phantomjs-prebuilt": "^2.1.7",
+    "sinon": "^1.17.5",
+    "through2": "^2.0.1",
+    "uglify-js": "^2.6.2",
+    "watchify": "^3.7.0"
   }
 }

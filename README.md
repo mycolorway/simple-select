@@ -1,133 +1,176 @@
-simple-select
+Simple Select
 =============
 
-一个基于 [Simple Module](https://github.com/mycolorway/simple-module) 的快速选择组件。
+[![Latest Version](https://img.shields.io/npm/v/simple-select.svg)](https://www.npmjs.com/package/simple-select)
+[![Build Status](https://img.shields.io/travis/mycolorway/simple-select.svg)](https://travis-ci.org/mycolorway/simple-select)
+[![Coveralls](https://img.shields.io/coveralls/mycolorway/simple-select.svg)](https://coveralls.io/github/mycolorway/simple-select)
+[![David](https://img.shields.io/david/mycolorway/simple-select.svg)](https://david-dm.org/mycolorway/simple-select)
+[![David](https://img.shields.io/david/dev/mycolorway/simple-select.svg)](https://david-dm.org/mycolorway/simple-select#info=devDependencies)
+[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/mycolorway/simple-select)
 
-![Demo Gif](https://raw.githubusercontent.com/mycolorway/simple-select/master/demo.gif)
 
-### 如何使用
+Autocomplete select component, supports multiple select mode and ajax remote data source.
 
-#### 下载并引用
+## Installation
 
-通过 `bower install` 下载依赖的第三方库，然后在页面中引入这些文件：
+Install via npm:
+
+```bash
+npm install --save simple-select
+```
+
+Install via bower:
+
+```bash
+bower install --save simple-select
+```
+
+## Usage
 
 ```html
 <link rel="stylesheet" type="text/css" href="[style path]/select.css" />
 
 <script type="text/javascript" src="[script path]/jquery.min.js"></script>
-<script type="text/javascript" src="[script path]/jquery.mousewheel.min.js"></script>
 <script type="text/javascript" src="[script path]/module.js"></script>
-<!-- simple-util https://github.com/mycolorway/simple-util -->
-<script type="text/javascript" src="[script path]/util.js"></script>
 <script type="text/javascript" src="[script path]/select.js"></script>
-```
 
-#### 初始化配置
-
-在使用 simple-select 的 HTML 页面里应该有一个对应的 select 元素，例如：
-
-```html
-<select></select>
-```
-
-我们需要在这个页面的脚本里初始化 simple-select：
-
-```javascript
-simple.select({
-    el: $('select'),           // * 必须
-    cls: "",                   // 额外的 class
-    onItemRender: $.noop,      // 渲染列表每个元素后调用的函数
-    placeholder: "",           // input 元素的 placeholder 属性
-    multiline: false          // input 元素是否可换行，默认为true
-});
-```
-
-组件会通过 `<select>` 元素生成列表元素，如：
-
-```html
-<select>
+<select class="name-list" multiple="true">
     <option data-key="George Washington">George Washington</option>
     <option data-key="John Adams">John Adams</option>
     <option data-key="Thomas Jefferson">Thomas Jefferson</option>
 </select>
-<script type="text/javascript">
-    $(function() {
-        simple.select({
-            el: $('select')
-        });
-    });
-</script>
 ```
 
-### 方法和事件
-
-simple-select 初始化之后，select 实例会暴露一些公共方法供调用：
-
-```javascript
-// 初始化 simple-select
-var select = simple.select({
-  el: $('select')
+```js
+simple.select({
+  el: '.name-list'
 });
-
-// 调用 selectItem 方法选择第三个元素
-select.selectItem(2);
 ```
 
-#### 公共方法
+Note: if element is a `[multiple]` select, the multiple mode will be activated automatically.
 
-**setItems(items)**
+## Options
 
-设置 simple-select 列表元素，`label` `key` 为必须属性，所有属性都保存在对应 item 的 data 属性里：
+__el__
 
-```javascript
-select.setItems([{
-  label: "张三",
-  hint: '#1',
-  key: "zhangsan zs 张三",
-  id: "1"
-},{
-  label: "李四",
-  hint: '#2',
-  key: "lisi ls 李四",
-  id: "2"
-},{
-  label: "王麻子",
-  hint: '#3',
-  key: "wangmazi wmz 王麻子",
-  id: "3"
-}]);
+Selector/Element/jQuery Object, Required, specify the select element to be initialized with.
+
+__remote__
+
+false/Hash, set a hash to enable remote data source mode. The hash may contain three key/value pairs:
+
+```js
+{
+  url: 'xxx', // ajax api url, required
+  searchKey: 'name', // param key for the user input search value, required
+  params: {} // extra params passing to the server, optional
+}
 ```
 
-**selectItem(index)**
+ This option is required unless `el` option is present.
 
-选择对应的列表元素，返回该元素的属性：
+__cls__
 
-```javascript
-select.selectItem(2);
-// 返回
-// {
-//   label: "王麻子",
-//   hint: '#2',
-//   key: "wangmazi wmz 王麻子",
-//   id: "3"
-// }
+String, extra html class to be added to wrapper element for style customization.
+
+__onItemRender__
+
+Function, callback function to be called when item renders in dropdown list with two params: item element and item data.
+
+__placeholder__
+
+String, set placeholder for input element. The default placeholder is the text of blank option if it exists.
+
+__allowInput__
+
+false/Selector/Element/jQuery Object, false by default, set an `input:text` element to allow submit custom value outside select options. If you pass a selector, the `allowInput` element need be sibling of select element.
+
+__noWrap__
+
+Boolean, false by default, set true to allow word wrap in text field.
+
+__locales__
+
+Hash, set custom locale texts for a single instance. If you want to set default locales for all simple-select instances, use `simple.select.locales` instead.
+
+
+## Methods
+
+__selectItem__
+
+(`String` value), set selected option by value.
+
+__unselectItem__
+
+(`String` value), remove selected option in multiple select mode.
+
+__clear__
+
+clear selected option and .
+
+__disable__
+
+Disable component, cannot make changes.
+
+__enable__
+
+Enable component.
+
+__destroy__
+
+Destroy component, restore element to original state.
+
+## Events
+
+__change__
+
+Triggered when the selection is changed with selection data as param.
+
+## Development
+
+Clone repository from github:
+
+```bash
+git clone https://github.com/mycolorway/simple-select.git
 ```
 
-**clearSelection()**
+Install npm dependencies:
 
-清除输入内容和选择的元素。
+```bash
+npm install
+```
 
-**destroy()**
+Run default gulp task to build project, which will compile source files, run test and watch file changes for you:
 
-恢复到初始化之前的状态。
+```bash
+gulp
+```
 
+Now, you are ready to go.
 
-#### 事件
+## Publish
 
-**select**
+If you want to publish new version to npm and bower, please make sure all tests have passed before you publish new version, and you need do these preparations:
 
-触发条件：选择某个列表元素。返回该元素的属性。
+* Add new release information in `CHANGELOG.md`. The format of markdown contents will matter, because build scripts will get version and release content from this file by regular expression. You can follow the format of the older release information.
 
-**clear**
+* Put your [personal API tokens](https://github.com/blog/1509-personal-api-tokens) in `/.token.json`, which is required by the build scripts to request [Github API](https://developer.github.com/v3/) for creating new release:
 
-触发条件：清除输入内容和选择的元素。
+```json
+{
+  "github": "[your github personal access token]"
+}
+```
+
+Now you can run `gulp publish` task, which will do these work for you:
+
+* Get version number from `CHANGELOG.md` and bump it into `package.json` and `bower.json`.
+* Get release information from `CHANGELOG.md` and request Github API to create new release.
+
+If everything goes fine, you can see your release at [https://github.com/mycolorway/simple-select/releases](https://github.com/mycolorway/simple-select/releases). At the End you can publish new version to npm with the command:
+
+```bash
+npm publish
+```
+
+Please be careful with the last step, because you cannot delete or republish a release on npm.
