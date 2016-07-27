@@ -1,5 +1,5 @@
 /**
- * simple-select v2.1.0
+ * simple-select v2.1.1
  * http://mycolorway.github.io/simple-select
  *
  * Copyright Mycolorway Design
@@ -120,11 +120,9 @@ HtmlSelect = (function(superClass) {
 module.exports = HtmlSelect;
 
 },{"./models/group.coffee":4}],2:[function(require,module,exports){
-var DataProvider, Input, Item,
+var Input, Item,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
-
-DataProvider = require('./models/data-provider.coffee');
 
 Item = require('./models/item.coffee');
 
@@ -137,6 +135,7 @@ Input = (function(superClass) {
 
   Input.prototype.opts = {
     el: null,
+    dataProvider: null,
     noWrap: false,
     placeholder: '',
     selected: false
@@ -144,7 +143,7 @@ Input = (function(superClass) {
 
   Input.prototype._init = function() {
     this.el = $(this.opts.el);
-    this.dataProvider = DataProvider.getInstance();
+    this.dataProvider = this.opts.dataProvider;
     this._render();
     return this._bind();
   };
@@ -306,7 +305,7 @@ Input = (function(superClass) {
 
 module.exports = Input;
 
-},{"./models/data-provider.coffee":3,"./models/item.coffee":5}],3:[function(require,module,exports){
+},{"./models/item.coffee":5}],3:[function(require,module,exports){
 var DataProvider, Group,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -320,10 +319,6 @@ DataProvider = (function(superClass) {
     return DataProvider.__super__.constructor.apply(this, arguments);
   }
 
-  DataProvider.getInstance = function() {
-    return this.instance;
-  };
-
   DataProvider.prototype.opts = {
     remote: false,
     groups: null,
@@ -333,11 +328,10 @@ DataProvider = (function(superClass) {
   DataProvider.prototype._init = function() {
     this.remote = this.opts.remote;
     if (this.opts.groups) {
-      this.setGroupsFromJson(this.opts.groups);
+      return this.setGroupsFromJson(this.opts.groups);
     } else if (this.opts.selectEl) {
-      this.setGroupsFromHtml(this.opts.selectEl);
+      return this.setGroupsFromHtml(this.opts.selectEl);
     }
-    return DataProvider.instance = this;
   };
 
   DataProvider.prototype._fetch = function(value, callback) {
@@ -793,11 +787,9 @@ MultipleInput = (function(superClass) {
 module.exports = MultipleInput;
 
 },{"./input.coffee":2,"./models/item.coffee":5}],7:[function(require,module,exports){
-var DataProvider, Group, Item, Popover,
+var Group, Item, Popover,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
-
-DataProvider = require('./models/data-provider.coffee');
 
 Group = require('./models/group.coffee');
 
@@ -815,12 +807,14 @@ Popover = (function(superClass) {
   Popover.prototype.opts = {
     el: null,
     groups: [],
+    dataProvider: null,
     onItemRender: null,
     localse: {}
   };
 
   Popover.prototype._init = function() {
     this.el = $(this.opts.el);
+    this.dataProvider = this.opts.dataProvider;
     this.groups = this.opts.groups;
     this._render();
     return this._bind();
@@ -980,7 +974,7 @@ Popover = (function(superClass) {
 
 module.exports = Popover;
 
-},{"./models/data-provider.coffee":3,"./models/group.coffee":4,"./models/item.coffee":5}],"simple-select":[function(require,module,exports){
+},{"./models/group.coffee":4,"./models/item.coffee":5}],"simple-select":[function(require,module,exports){
 var DataProvider, Group, HtmlSelect, Input, Item, MultipleInput, Popover, SimpleSelect,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -1048,6 +1042,7 @@ SimpleSelect = (function(superClass) {
     if (this.multiple) {
       this.input = new MultipleInput({
         el: this.wrapper.find('.input'),
+        dataProvider: this.dataProvider,
         placeholder: placeholder,
         selected: this.htmlSelect.getValue()
       });
@@ -1055,6 +1050,7 @@ SimpleSelect = (function(superClass) {
     } else {
       this.input = new Input({
         el: this.wrapper.find('.input'),
+        dataProvider: this.dataProvider,
         placeholder: placeholder,
         noWrap: this.opts.noWrap,
         selected: this.htmlSelect.getValue()
@@ -1063,6 +1059,7 @@ SimpleSelect = (function(superClass) {
     }
     this.popover = new Popover({
       el: this.wrapper.find('.popover'),
+      dataProvider: this.dataProvider,
       groups: groups,
       onItemRender: this.opts.onItemRender,
       locales: this.locales

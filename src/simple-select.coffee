@@ -58,12 +58,14 @@ class SimpleSelect extends SimpleModule
     if @multiple
       @input = new MultipleInput
         el: @wrapper.find('.input')
+        dataProvider: @dataProvider
         placeholder: placeholder
         selected: @htmlSelect.getValue()
       groups = @dataProvider.excludeItems @input.selected
     else
       @input = new Input
         el: @wrapper.find('.input')
+        dataProvider: @dataProvider
         placeholder: placeholder
         noWrap: @opts.noWrap
         selected: @htmlSelect.getValue()
@@ -71,6 +73,7 @@ class SimpleSelect extends SimpleModule
 
     @popover = new Popover
       el: @wrapper.find('.popover')
+      dataProvider: @dataProvider
       groups: groups
       onItemRender: @opts.onItemRender
       locales: @locales

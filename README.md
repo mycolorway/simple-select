@@ -152,20 +152,15 @@ Now, you are ready to go.
 
 If you want to publish new version to npm and bower, please make sure all tests have passed before you publish new version, and you need do these preparations:
 
+* Check the version number in `bower.json` and `package.json`.
+
 * Add new release information in `CHANGELOG.md`. The format of markdown contents will matter, because build scripts will get version and release content from this file by regular expression. You can follow the format of the older release information.
 
-* Put your [personal API tokens](https://github.com/blog/1509-personal-api-tokens) in `/.token.json`, which is required by the build scripts to request [Github API](https://developer.github.com/v3/) for creating new release:
+* Put your [personal API tokens](https://github.com/blog/1509-personal-api-tokens) in `/.token`, which is required by the build scripts to request [Github API](https://developer.github.com/v3/) for creating new release.
 
-```json
-{
-  "github": "[your github personal access token]"
-}
-```
+* Commit changes and push.
 
-Now you can run `gulp publish` task, which will do these work for you:
-
-* Get version number from `CHANGELOG.md` and bump it into `package.json` and `bower.json`.
-* Get release information from `CHANGELOG.md` and request Github API to create new release.
+Now you can run `gulp publish` task, which will request Github API to create new release.
 
 If everything goes fine, you can see your release at [https://github.com/mycolorway/simple-select/releases](https://github.com/mycolorway/simple-select/releases). At the End you can publish new version to npm with the command:
 

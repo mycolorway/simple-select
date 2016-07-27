@@ -1,4 +1,3 @@
-DataProvider = require './models/data-provider.coffee'
 Group = require './models/group.coffee'
 Item = require './models/item.coffee'
 
@@ -14,11 +13,13 @@ class Popover extends SimpleModule
   opts:
     el: null
     groups: []
+    dataProvider: null
     onItemRender: null
     localse: {}
 
   _init: ->
     @el = $ @opts.el
+    @dataProvider = @opts.dataProvider
     @groups = @opts.groups
 
     @_render()

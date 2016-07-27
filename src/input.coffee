@@ -1,17 +1,17 @@
-DataProvider = require './models/data-provider.coffee'
 Item = require './models/item.coffee'
 
 class Input extends SimpleModule
 
   opts:
     el: null
+    dataProvider: null
     noWrap: false
     placeholder: ''
     selected: false
 
   _init: ->
     @el = $ @opts.el
-    @dataProvider = DataProvider.getInstance()
+    @dataProvider = @opts.dataProvider
     @_render()
     @_bind()
 

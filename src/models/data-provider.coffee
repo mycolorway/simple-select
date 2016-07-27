@@ -2,9 +2,6 @@ Group = require './group.coffee'
 
 class DataProvider extends SimpleModule
 
-  @getInstance: ->
-    @instance
-
   opts:
     remote: false
     groups: null
@@ -17,8 +14,6 @@ class DataProvider extends SimpleModule
       @setGroupsFromJson @opts.groups
     else if @opts.selectEl
       @setGroupsFromHtml @opts.selectEl
-
-    DataProvider.instance = @
 
   _fetch: (value, callback) ->
     return if !@remote || @triggerHandler('beforeFetch') == false
