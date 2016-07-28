@@ -12,6 +12,7 @@ class Input extends SimpleModule
   _init: ->
     @el = $ @opts.el
     @dataProvider = @opts.dataProvider
+    @focused = false
     @_render()
     @_bind()
 

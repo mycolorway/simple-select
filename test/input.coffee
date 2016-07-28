@@ -7,8 +7,9 @@ describe 'Input', ->
   input = null
 
   beforeEach ->
+    $el = $('<div>').appendTo('body')
     input = new Input
-      el: '<div>'
+      el: $el
       noWrap: false
       placeholder: 'please select'
       selected: new Item
@@ -48,3 +49,21 @@ describe 'Input', ->
     expect(spy.calledWith(sinon.match.object, 'down')).to.be.true
     input.textField.trigger $.Event('keydown', which: 38)
     expect(spy.calledWith(sinon.match.object, 'up')).to.be.true
+
+  it 'will trigger enterPress event when enter is pressed', ->
+    spy = sinon.spy()
+    input.on 'enterPress', spy
+    input.textField.trigger $.Event('keydown', which: 13)
+    expect(spy.calledOnce).to.be.true
+
+  it 'will clear selection when backspace is pressed', ->
+    expect(!!input.selected).to.be.true
+    input.textField.trigger $.Event('keydown', which: 8)
+    expect(!!input.selected).to.be.false
+    expect(input.getValue()).to.be.equal ''
+
+  it 'will blur when esc is pressed', ->
+    input.focus()
+    expect(input.focused).to.be.true
+    input.textField.trigger $.Event('keydown', which: 27)
+    expect(input.focused).to.be.false

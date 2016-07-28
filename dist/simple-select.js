@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mycolorway.github.io/simple-select/license.html
  *
- * Date: 2016-07-27
+ * Date: 2016-07-28
  */
 ;(function(root, factory) {
   if (typeof module === 'object' && module.exports) {
@@ -144,6 +144,7 @@ Input = (function(superClass) {
   Input.prototype._init = function() {
     this.el = $(this.opts.el);
     this.dataProvider = this.opts.dataProvider;
+    this.focused = false;
     this._render();
     return this._bind();
   };
