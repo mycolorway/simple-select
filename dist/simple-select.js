@@ -1,12 +1,12 @@
 /**
- * simple-select v2.1.1
+ * simple-select v2.1.2
  * http://mycolorway.github.io/simple-select
  *
  * Copyright Mycolorway Design
  * Released under the MIT license
  * http://mycolorway.github.io/simple-select/license.html
  *
- * Date: 2016-07-28
+ * Date: 2016-07-29
  */
 ;(function(root, factory) {
   if (typeof module === 'object' && module.exports) {
@@ -1175,7 +1175,10 @@ SimpleSelect = (function(superClass) {
           if (item = _this.dataProvider.getItemByName(value)) {
             _this.selectItem(item);
           } else {
-            _this._setUserInput(value);
+            if (!_this.opts.allowInput) {
+              _this.input.setValue('');
+            }
+            _this._setUserInput();
           }
         }
         return _this.popover.setActive(false);

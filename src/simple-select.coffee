@@ -155,7 +155,9 @@ class SimpleSelect extends SimpleModule
         if item = @dataProvider.getItemByName(value)
           @selectItem item
         else
-          @_setUserInput value
+          @input.setValue('') unless @opts.allowInput
+          @_setUserInput()
+      
       @popover.setActive false
 
   _setUserInput: (value = @input.getValue()) ->
