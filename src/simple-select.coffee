@@ -110,7 +110,7 @@ class SimpleSelect extends SimpleModule
       @_setPopoverPosition()
       if !@multiple && @input.selected
         @popover.setHighlighted @input.selected
-      else
+      else if !@popover.highlighted
         @popover.highlightNextItem()
 
     # input events
@@ -157,7 +157,7 @@ class SimpleSelect extends SimpleModule
         else
           @input.setValue('') unless @opts.allowInput
           @_setUserInput()
-      
+
       @popover.setActive false
 
   _setUserInput: (value = @input.getValue()) ->

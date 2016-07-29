@@ -1105,7 +1105,7 @@ SimpleSelect = (function(superClass) {
         _this._setPopoverPosition();
         if (!_this.multiple && _this.input.selected) {
           return _this.popover.setHighlighted(_this.input.selected);
-        } else {
+        } else if (!_this.popover.highlighted) {
           return _this.popover.highlightNextItem();
         }
       };
