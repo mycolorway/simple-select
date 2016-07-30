@@ -13,6 +13,7 @@ class Input extends SimpleModule
     @el = $ @opts.el
     @dataProvider = @opts.dataProvider
     @focused = false
+    @_inputDelay = 200
     @_render()
     @_bind()
 
@@ -73,7 +74,7 @@ class Input extends SimpleModule
         @_inputTimer = null
       @_inputTimer = setTimeout =>
         @_onInputChange()
-      , 200
+      , @_inputDelay
     .on "blur.simple-select", (e) =>
       @focused = false
       @triggerHandler 'blur'

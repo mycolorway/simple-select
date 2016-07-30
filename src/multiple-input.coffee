@@ -5,6 +5,7 @@ class MultipleInput extends Input
 
   opts:
     el: null
+    dataProvider: null
     placeholder: ''
     selected: false
 
@@ -55,7 +56,7 @@ class MultipleInput extends Input
 
   setSelected: (item = false) ->
     if item
-      @addSelected selected
+      @addSelected item
     else
       @clear()
 

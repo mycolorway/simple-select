@@ -32,7 +32,7 @@ describe 'Html Select', ->
     expect(htmlSelect.el.is('select')).to.be.true
     expect(htmlSelect.groups.length).to.be.equal 2
 
-  it 'will render after setGroups', ->
+  it 'should render after setGroups', ->
     expect(htmlSelect.el.find('optgroup').length).to.be.equal 2
     expect(htmlSelect.el.find('option').length).to.be.equal 4
 
