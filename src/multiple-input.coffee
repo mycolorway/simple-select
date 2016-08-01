@@ -1,5 +1,6 @@
 Item = require './models/item.coffee'
 Input = require './input.coffee'
+events = require './helpers/events.coffee'
 
 class MultipleInput extends Input
 
@@ -32,7 +33,7 @@ class MultipleInput extends Input
   _bind: ->
     super()
 
-    @el.on 'mousedown', '.selected-item', (e) =>
+    @el.on events.MOUSEDOWN, '.selected-item', (e) =>
       $item = $ e.currentTarget
       @triggerHandler 'itemClick', [$item, $item.data('item')]
       false
@@ -40,7 +41,7 @@ class MultipleInput extends Input
   _onBackspacePress: (e) ->
     unless @getValue()
       e.preventDefault()
-      @el.find('.selected-item:last').mousedown()
+      @el.find('.selected-item:last').trigger events.MOUSEDOWN
 
   _onInputChange: ->
     @triggerHandler 'change', [@getValue()]

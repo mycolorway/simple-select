@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mycolorway.github.io/simple-select/license.html
  *
- * Date: 2016-07-30
+ * Date: 2016-08-1
  */
 ;(function(root, factory) {
   if (typeof module === 'object' && module.exports) {
@@ -22,6 +22,16 @@
 }(this, function ($,SimpleModule) {
 var define, module, exports;
 var b = require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var events,
+  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+events = {};
+
+events.MOUSEDOWN = indexOf.call(document.documentElement, 'touchstart') >= 0 ? 'touchstart' : 'mousedown';
+
+module.exports = events;
+
+},{}],2:[function(require,module,exports){
 var Group, HtmlSelect,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -119,12 +129,14 @@ HtmlSelect = (function(superClass) {
 
 module.exports = HtmlSelect;
 
-},{"./models/group.coffee":4}],2:[function(require,module,exports){
-var Input, Item,
+},{"./models/group.coffee":5}],3:[function(require,module,exports){
+var Input, Item, events,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
 Item = require('./models/item.coffee');
+
+events = require('./helpers/events.coffee');
 
 Input = (function(superClass) {
   extend(Input, superClass);
@@ -160,13 +172,13 @@ Input = (function(superClass) {
   };
 
   Input.prototype._bind = function() {
-    this.el.on('mousedown', (function(_this) {
+    this.el.on(events.MOUSEDOWN, (function(_this) {
       return function(e) {
         _this.textField.focus();
         return false;
       };
     })(this));
-    this.el.find(".link-expand").on("mousedown", (function(_this) {
+    this.el.find(".link-expand").on(events.MOUSEDOWN, (function(_this) {
       return function(e) {
         if (_this.disabled) {
           return;
@@ -178,7 +190,7 @@ Input = (function(superClass) {
         return false;
       };
     })(this));
-    this.el.find(".link-clear").on("mousedown", (function(_this) {
+    this.el.find(".link-clear").on(events.MOUSEDOWN, (function(_this) {
       return function(e) {
         if (_this.disabled) {
           return;
@@ -307,7 +319,7 @@ Input = (function(superClass) {
 
 module.exports = Input;
 
-},{"./models/item.coffee":5}],3:[function(require,module,exports){
+},{"./helpers/events.coffee":1,"./models/item.coffee":6}],4:[function(require,module,exports){
 var DataProvider, Group,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -510,7 +522,7 @@ DataProvider = (function(superClass) {
 
 module.exports = DataProvider;
 
-},{"./group.coffee":4}],4:[function(require,module,exports){
+},{"./group.coffee":5}],5:[function(require,module,exports){
 var Group, Item;
 
 Item = require('./item.coffee');
@@ -600,7 +612,7 @@ Group = (function() {
 
 module.exports = Group;
 
-},{"./item.coffee":5}],5:[function(require,module,exports){
+},{"./item.coffee":6}],6:[function(require,module,exports){
 var Item,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -646,14 +658,16 @@ Item = (function(superClass) {
 
 module.exports = Item;
 
-},{}],6:[function(require,module,exports){
-var Input, Item, MultipleInput,
+},{}],7:[function(require,module,exports){
+var Input, Item, MultipleInput, events,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
 Item = require('./models/item.coffee');
 
 Input = require('./input.coffee');
+
+events = require('./helpers/events.coffee');
 
 MultipleInput = (function(superClass) {
   extend(MultipleInput, superClass);
@@ -687,7 +701,7 @@ MultipleInput = (function(superClass) {
 
   MultipleInput.prototype._bind = function() {
     MultipleInput.__super__._bind.call(this);
-    return this.el.on('mousedown', '.selected-item', (function(_this) {
+    return this.el.on(events.MOUSEDOWN, '.selected-item', (function(_this) {
       return function(e) {
         var $item;
         $item = $(e.currentTarget);
@@ -700,7 +714,7 @@ MultipleInput = (function(superClass) {
   MultipleInput.prototype._onBackspacePress = function(e) {
     if (!this.getValue()) {
       e.preventDefault();
-      return this.el.find('.selected-item:last').mousedown();
+      return this.el.find('.selected-item:last').trigger(events.MOUSEDOWN);
     }
   };
 
@@ -789,14 +803,16 @@ MultipleInput = (function(superClass) {
 
 module.exports = MultipleInput;
 
-},{"./input.coffee":2,"./models/item.coffee":5}],7:[function(require,module,exports){
-var Group, Item, Popover,
+},{"./helpers/events.coffee":1,"./input.coffee":3,"./models/item.coffee":6}],8:[function(require,module,exports){
+var Group, Item, Popover, events,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
 Group = require('./models/group.coffee');
 
 Item = require('./models/item.coffee');
+
+events = require('./helpers/events.coffee');
 
 Popover = (function(superClass) {
   extend(Popover, superClass);
@@ -864,7 +880,7 @@ Popover = (function(superClass) {
   };
 
   Popover.prototype._bind = function() {
-    return this.el.on('mousedown', '.select-item', (function(_this) {
+    return this.el.on(events.MOUSEDOWN, '.select-item', (function(_this) {
       return function(e) {
         var $item;
         $item = $(e.currentTarget);
@@ -977,7 +993,7 @@ Popover = (function(superClass) {
 
 module.exports = Popover;
 
-},{"./models/group.coffee":4,"./models/item.coffee":5}],"simple-select":[function(require,module,exports){
+},{"./helpers/events.coffee":1,"./models/group.coffee":5,"./models/item.coffee":6}],"simple-select":[function(require,module,exports){
 var DataProvider, Group, HtmlSelect, Input, Item, MultipleInput, Popover, SimpleSelect,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -1315,7 +1331,7 @@ SimpleSelect = (function(superClass) {
 
 module.exports = SimpleSelect;
 
-},{"./html-select.coffee":1,"./input.coffee":2,"./models/data-provider.coffee":3,"./models/group.coffee":4,"./models/item.coffee":5,"./multiple-input.coffee":6,"./popover.coffee":7}]},{},[]);
+},{"./html-select.coffee":2,"./input.coffee":3,"./models/data-provider.coffee":4,"./models/group.coffee":5,"./models/item.coffee":6,"./multiple-input.coffee":7,"./popover.coffee":8}]},{},[]);
 
 return b('simple-select');
 }));

@@ -1,4 +1,5 @@
 SimpleSelect = require '../src/simple-select'
+events = require '../src/helpers/events'
 expect = chai.expect
 
 describe 'Simple Select', ->
@@ -73,7 +74,7 @@ describe 'Simple Select', ->
     spy = sinon.spy select, 'selectItem'
     $item = select.popover.el.find '.select-item[data-value=audi]'
     item = $item.data 'item'
-    $item.mousedown()
+    $item.trigger events.MOUSEDOWN
     expect(spy.calledWithMatch item).to.be.true
 
   it 'should set highlighted item when popover shows', ->
@@ -90,5 +91,5 @@ describe 'Simple Select', ->
     spy = sinon.spy multipleSelect, 'unselectItem'
     $item = multipleSelect.input.el.find '.selected-item:first'
     item = $item.data 'item'
-    $item.mousedown()
+    $item.trigger events.MOUSEDOWN
     expect(spy.calledWithMatch item).to.be.true

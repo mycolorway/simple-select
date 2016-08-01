@@ -1,5 +1,6 @@
 Group = require './models/group.coffee'
 Item = require './models/item.coffee'
+events = require './helpers/events.coffee'
 
 class Popover extends SimpleModule
 
@@ -59,7 +60,7 @@ class Popover extends SimpleModule
     @el
 
   _bind: ->
-    @el.on 'mousedown', '.select-item', (e) =>
+    @el.on events.MOUSEDOWN, '.select-item', (e) =>
       $item = $ e.currentTarget
       @triggerHandler 'itemClick', [$item, $item.data('item')]
       false

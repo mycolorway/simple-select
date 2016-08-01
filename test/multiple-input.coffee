@@ -1,5 +1,6 @@
 DataProvider = require '../src/models/data-provider'
 MultipleInput = require '../src/multiple-input'
+events = require '../src/helpers/events'
 expect = chai.expect
 
 describe 'Multiple Input', ->
@@ -43,7 +44,7 @@ describe 'Multiple Input', ->
     matchItem = sinon.match ($el) ->
       $el.length > 0 && $el[0] == $item[0]
 
-    $item.mousedown()
+    $item.trigger events.MOUSEDOWN
     expect(spy.calledWith(sinon.match.object, matchItem, item)).to.be.true
 
   it 'should click on last selected item when backspace is pressed', ->

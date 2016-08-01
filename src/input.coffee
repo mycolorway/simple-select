@@ -1,4 +1,5 @@
 Item = require './models/item.coffee'
+events = require './helpers/events.coffee'
 
 class Input extends SimpleModule
 
@@ -36,17 +37,17 @@ class Input extends SimpleModule
     @el
 
   _bind: ->
-    @el.on 'mousedown', (e) =>
+    @el.on events.MOUSEDOWN, (e) =>
       @textField.focus()
       false
 
-    @el.find(".link-expand").on "mousedown", (e) =>
+    @el.find(".link-expand").on events.MOUSEDOWN, (e) =>
       return if @disabled
       @focus() unless @focused
       @trigger 'expandClick'
       false
 
-    @el.find(".link-clear").on "mousedown", (e) =>
+    @el.find(".link-clear").on events.MOUSEDOWN, (e) =>
       return if @disabled
       @trigger 'clearClick'
       false

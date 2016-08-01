@@ -1,5 +1,6 @@
 DataProvider = require '../src/models/data-provider'
 Input = require '../src/input'
+events = require '../src/helpers/events'
 expect = chai.expect
 
 describe 'Input', ->
@@ -45,13 +46,13 @@ describe 'Input', ->
   it 'should trigger expandClick event when mousedown on .link-expand', ->
     spy = sinon.spy()
     input.on 'expandClick', spy
-    input.el.find('.link-expand').mousedown()
+    input.el.find('.link-expand').trigger events.MOUSEDOWN
     expect(spy.calledOnce).to.be.true
 
   it 'should trigger clearClick event when mousedown on .link-clear', ->
     spy = sinon.spy()
     input.on 'clearClick', spy
-    input.el.find('.link-clear').mousedown()
+    input.el.find('.link-clear').trigger events.MOUSEDOWN
     expect(spy.calledOnce).to.be.true
 
   it 'should trigger arrowPress event when up/down is pressed', ->
