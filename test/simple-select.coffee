@@ -102,3 +102,93 @@ describe 'Simple Select', ->
     spy = sinon.spy select.popover, 'setActive'
     select.input.el.find('.link-expand').mousedown()
     expect(spy.lastCall.args[0]).to.be.true
+
+  it 'should change popover highlighted item when input arrowPress event triggered', ->
+    highlightPrevSpy = sinon.spy select.popover, 'highlightPrevItem'
+    highlightNextSpy = sinon.spy select.popover, 'highlightNextItem'
+    arrowPressSpy = sinon.spy()
+    select.input.on 'arrowPress', arrowPressSpy
+
+    select.input.focus()
+    select.input.textField.trigger $.Event('keydown', which: 40)
+    expect(arrowPressSpy.calledWith(sinon.match.object, 'down')).to.be.true
+    expect(highlightNextSpy.calledOnce).to.be.true
+
+    arrowPressSpy.reset()
+    select.input.textField.trigger $.Event('keydown', which: 38)
+    expect(arrowPressSpy.calledWith(sinon.match.object, 'up')).to.be.true
+    expect(highlightPrevSpy.calledOnce).to.be.true
+
+  it 'should select popover highlighted item when input enterPress event triggered', ->
+    selectItemSpy = sinon.spy select, 'selectItem'
+    setActiveSpy = sinon.spy select.popover, 'setActive'
+
+    select.input.focus()
+    select.input.setValue 'vol'
+    select.input.textField.trigger $.Event('keydown', which: 13)
+
+    item = select.dataProvider.getItem('volvo')
+    expect(selectItemSpy.calledWith item).to.be.true
+    expect(setActiveSpy.calledWith false).to.be.true
+
+  it 'should set custom input value when input enterPress event triggered and no popover highlighted item is found', ->
+    setUserInputSpy = sinon.spy select, '_setUserInput'
+    setActiveSpy = sinon.spy select.popover, 'setActive'
+
+    select.input.focus()
+    select.input.setValue 'test'
+    select.input.textField.trigger $.Event('keydown', which: 13)
+    expect(setUserInputSpy.calledOnce).to.be.true
+    expect(setActiveSpy.calledWith false).to.be.true
+
+  it 'should submit closest form when input enterPress event triggered with selected item', ->
+    submitStub = sinon.stub()
+    submitStub.returns false
+    $form = $('<form>').appendTo 'body'
+      .append select.wrapper
+    $form.on 'submit', submitStub
+
+    select.input.focus()
+    select.input.setValue 'vol'
+    select.input.textField.trigger $.Event('keydown', which: 13)
+    select.input.textField.trigger $.Event('keydown', which: 13)
+    expect(submitStub.calledOnce).to.be.true
+    expect(select.el.val()).to.be.equal 'volvo'
+
+    select.wrapper.appendTo 'body'
+    $form.remove()
+
+  it 'should sync value and filter data provider when input change event triggered', ->
+    syncValueSpy = sinon.spy select, '_syncValue'
+    filterSpy = sinon.spy select.dataProvider, 'filter'
+    setPositionSpy = sinon.spy select, '_setPopoverPosition'
+
+    select.input.setValue 'vol'
+    expect(syncValueSpy.calledOnce).to.be.true
+    expect(filterSpy.calledWith 'vol').to.be.true
+    expect(setPositionSpy.called).to.be.true
+
+  it 'should set popover active when input focus event triggered', ->
+    setActiveSpy = sinon.spy select.popover, 'setActive'
+    select.input.focus()
+    expect(setActiveSpy.calledWith true).to.be.true
+
+  it 'should find and select item when input blur event triggered', ->
+    getItemSpy = sinon.spy select.dataProvider, 'getItemByName'
+    selectItemSpy = sinon.spy select, 'selectItem'
+
+    select.input.setValue 'Volvo'
+    select.input.blur()
+    expect(getItemSpy.calledWith 'Volvo').to.be.true
+    expect(selectItemSpy.calledWith getItemSpy.returnValues[0]).to.be.true
+
+    getItemSpy.reset()
+    setValueSpy = sinon.spy select.input, 'setValue'
+    setUserInputSpy = sinon.spy select, '_setUserInput'
+
+    select.input.setValue 'volvo'
+    select.input.blur()
+    expect(getItemSpy.calledWith 'volvo').to.be.true
+    expect(getItemSpy.returnValues[0]).to.be.null
+    expect(setValueSpy.lastCall.args[0]).to.be.equal ''
+    expect(setUserInputSpy.calledOnce).to.be.true

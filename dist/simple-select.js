@@ -1087,8 +1087,8 @@ SimpleSelect = (function(superClass) {
   };
 
   SimpleSelect.prototype._render = function() {
-    this.el.hide().data("simpleSelect", this);
     this.wrapper = $(SimpleSelect._tpl).data("simpleSelect", this).addClass(this.opts.cls).insertBefore(this.el);
+    this.el.hide().data("simpleSelect", this).appendTo(this.wrapper);
     if (this.opts.remote) {
       return this.wrapper.addClass('simple-select-remote');
     }

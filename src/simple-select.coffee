@@ -82,12 +82,13 @@ class SimpleSelect extends SimpleModule
     @disable() if @el.prop('disabled')
 
   _render: ->
-    @el.hide()
-      .data("simpleSelect", @)
     @wrapper = $(SimpleSelect._tpl)
       .data("simpleSelect", @)
       .addClass(@opts.cls)
       .insertBefore @el
+    @el.hide()
+      .data("simpleSelect", @)
+      .appendTo @wrapper
 
     if @opts.remote
       @wrapper.addClass 'simple-select-remote'
