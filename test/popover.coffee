@@ -1,7 +1,6 @@
 Group = require '../src/models/group'
 DataProvider = require '../src/models/data-provider'
 Popover = require '../src/popover'
-events = require '../src/helpers/events'
 expect = chai.expect
 
 describe 'Popover', ->
@@ -65,7 +64,7 @@ describe 'Popover', ->
     itemMatch = sinon.match ($el) ->
       $el.length > 0 && $el[0] == $item[0]
 
-    $item.trigger events.MOUSEDOWN
+    $item.mousedown()
     expect(spy.calledWith(sinon.match.object, itemMatch, $item.data('item')))
       .to.be.true
 
