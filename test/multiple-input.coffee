@@ -57,6 +57,7 @@ describe 'Multiple Input', ->
       $el.length > 0 && $el[0] == $item[0]
 
     input.textField.trigger $.Event('keydown', which: 8)
+    expect(spy.calledOnce).to.be.true
     expect(spy.calledWith(sinon.match.object, matchItem, item)).to.be.true
 
   it 'should trigger change event when input changed', (done) ->

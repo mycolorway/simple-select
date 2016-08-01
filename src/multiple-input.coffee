@@ -32,7 +32,8 @@ class MultipleInput extends Input
   _bind: ->
     super()
 
-    @el.on 'touchstart mousedown', '.selected-item', (e) =>
+    # click event is for touch screen device
+    @el.on 'mousedown click', '.selected-item', (e) =>
       e.preventDefault()
       $item = $ e.currentTarget
       @triggerHandler 'itemClick', [$item, $item.data('item')]

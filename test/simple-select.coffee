@@ -57,7 +57,7 @@ describe 'Simple Select', ->
     expect(excludeItemsSpy.calledWith multipleSelect.input.selected, sinon.match.array)
       .to.be.true
     expect(setGroupsSpy.calledWith excludeItemsSpy.returnValues[0]).to.be.true
-    expect(setGroupsSpy.calledWith true)
+    expect(setActiveSpy.calledWith true)
 
   it 'should set popover loading status before/after data provider fetch remote data', ->
     setLoadingSpy = sinon.spy select.popover, 'setLoading'
@@ -92,3 +92,13 @@ describe 'Simple Select', ->
     item = $item.data 'item'
     $item.mousedown()
     expect(spy.calledWithMatch item).to.be.true
+
+  it 'should clear component when input clearClick event triggered', ->
+    spy = sinon.spy select, 'clear'
+    select.input.el.find('.link-clear').mousedown()
+    expect(spy.calledOnce).to.be.true
+
+  it 'should set popover active when input expandClick event triggered', ->
+    spy = sinon.spy select.popover, 'setActive'
+    select.input.el.find('.link-expand').mousedown()
+    expect(spy.lastCall.args[0]).to.be.true

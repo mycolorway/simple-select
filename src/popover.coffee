@@ -59,7 +59,9 @@ class Popover extends SimpleModule
     @el
 
   _bind: ->
-    @el.on 'touchstart mousedown', '.select-item', (e) =>
+    # click event is for touch screen device
+    @el.on 'mousedown click', '.select-item', (e) =>
+      e.preventDefault()
       $item = $ e.currentTarget
       @triggerHandler 'itemClick', [$item, $item.data('item')]
       false
@@ -113,6 +115,7 @@ class Popover extends SimpleModule
       @setHighlighted $item.data('item')
 
   setLoading: (loading = true) ->
+    return if loading == @loading
     @loading = loading
 
     if loading
@@ -129,6 +132,7 @@ class Popover extends SimpleModule
     loading
 
   setActive: (active = true) ->
+    return if active == @active
     @active = active
     @el.toggleClass 'active', active
     if active

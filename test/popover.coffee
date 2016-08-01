@@ -65,6 +65,7 @@ describe 'Popover', ->
       $el.length > 0 && $el[0] == $item[0]
 
     $item.mousedown()
+    expect(spy.calledOnce).to.be.true
     expect(spy.calledWith(sinon.match.object, itemMatch, $item.data('item')))
       .to.be.true
 

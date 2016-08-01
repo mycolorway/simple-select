@@ -148,6 +148,7 @@ class SimpleSelect extends SimpleModule
     @input.on 'focus', (e) =>
       unless @dataProvider.remote && (!@input.getValue() || @input.selected)
         @popover.setActive true
+      null
 
     @input.on 'blur', (e) =>
       if !@multiple && !@input.selected
@@ -159,6 +160,7 @@ class SimpleSelect extends SimpleModule
           @_setUserInput()
 
       @popover.setActive false
+      null
 
   _setUserInput: (value = @input.getValue()) ->
     if @opts.allowInput && !@multiple

@@ -160,18 +160,18 @@ Input = (function(superClass) {
   };
 
   Input.prototype._bind = function() {
-    this.el.on('touchstart mousedown', (function(_this) {
+    this.el.on('mousedown click', (function(_this) {
       return function(e) {
         e.preventDefault();
         _this.textField.focus();
         return false;
       };
     })(this));
-    this.el.find(".link-expand").on('touchstart mousedown', (function(_this) {
+    this.el.find(".link-expand").on('mousedown click', (function(_this) {
       return function(e) {
         e.preventDefault();
         if (_this.disabled) {
-          return;
+          return false;
         }
         if (!_this.focused) {
           _this.focus();
@@ -180,11 +180,11 @@ Input = (function(superClass) {
         return false;
       };
     })(this));
-    this.el.find(".link-clear").on('touchstart mousedown', (function(_this) {
+    this.el.find(".link-clear").on('mousedown click', (function(_this) {
       return function(e) {
         e.preventDefault();
         if (_this.disabled) {
-          return;
+          return false;
         }
         _this.trigger('clearClick');
         return false;
@@ -220,12 +220,14 @@ Input = (function(superClass) {
     })(this)).on("blur.simple-select", (function(_this) {
       return function(e) {
         _this.focused = false;
-        return _this.triggerHandler('blur');
+        _this.triggerHandler('blur');
+        return null;
       };
     })(this)).on("focus.simple-select", (function(_this) {
       return function(e) {
         _this.focused = true;
-        return _this.triggerHandler('focus');
+        _this.triggerHandler('focus');
+        return null;
       };
     })(this));
   };
@@ -690,7 +692,7 @@ MultipleInput = (function(superClass) {
 
   MultipleInput.prototype._bind = function() {
     MultipleInput.__super__._bind.call(this);
-    return this.el.on('touchstart mousedown', '.selected-item', (function(_this) {
+    return this.el.on('mousedown click', '.selected-item', (function(_this) {
       return function(e) {
         var $item;
         e.preventDefault();
@@ -868,9 +870,10 @@ Popover = (function(superClass) {
   };
 
   Popover.prototype._bind = function() {
-    return this.el.on('touchstart mousedown', '.select-item', (function(_this) {
+    return this.el.on('mousedown click', '.select-item', (function(_this) {
       return function(e) {
         var $item;
+        e.preventDefault();
         $item = $(e.currentTarget);
         _this.triggerHandler('itemClick', [$item, $item.data('item')]);
         return false;
@@ -939,6 +942,9 @@ Popover = (function(superClass) {
     if (loading == null) {
       loading = true;
     }
+    if (loading === this.loading) {
+      return;
+    }
     this.loading = loading;
     if (loading) {
       if (!(this.el.find('.loading').length > 0)) {
@@ -956,6 +962,9 @@ Popover = (function(superClass) {
   Popover.prototype.setActive = function(active) {
     if (active == null) {
       active = true;
+    }
+    if (active === this.active) {
+      return;
     }
     this.active = active;
     this.el.toggleClass('active', active);
@@ -1169,8 +1178,9 @@ SimpleSelect = (function(superClass) {
     this.input.on('focus', (function(_this) {
       return function(e) {
         if (!(_this.dataProvider.remote && (!_this.input.getValue() || _this.input.selected))) {
-          return _this.popover.setActive(true);
+          _this.popover.setActive(true);
         }
+        return null;
       };
     })(this));
     return this.input.on('blur', (function(_this) {
@@ -1187,7 +1197,8 @@ SimpleSelect = (function(superClass) {
             _this._setUserInput();
           }
         }
-        return _this.popover.setActive(false);
+        _this.popover.setActive(false);
+        return null;
       };
     })(this));
   };

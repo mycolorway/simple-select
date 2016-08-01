@@ -36,21 +36,24 @@ class Input extends SimpleModule
     @el
 
   _bind: ->
-    @el.on 'touchstart mousedown', (e) =>
+    # click event is for touch screen device
+    @el.on 'mousedown click', (e) =>
       e.preventDefault()
       @textField.focus()
       false
 
-    @el.find(".link-expand").on 'touchstart mousedown', (e) =>
+    # click event is for touch screen device
+    @el.find(".link-expand").on 'mousedown click', (e) =>
       e.preventDefault()
-      return if @disabled
+      return false if @disabled
       @focus() unless @focused
       @trigger 'expandClick'
       false
 
-    @el.find(".link-clear").on 'touchstart mousedown', (e) =>
+    # click event is for touch screen device
+    @el.find(".link-clear").on 'mousedown click', (e) =>
       e.preventDefault()
-      return if @disabled
+      return false if @disabled
       @trigger 'clearClick'
       false
 
@@ -81,9 +84,11 @@ class Input extends SimpleModule
     .on "blur.simple-select", (e) =>
       @focused = false
       @triggerHandler 'blur'
+      null
     .on "focus.simple-select", (e) =>
       @focused = true
       @triggerHandler 'focus'
+      null
 
   _onBackspacePress: (e) ->
     if @selected
