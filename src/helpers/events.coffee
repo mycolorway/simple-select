@@ -1,7 +1,7 @@
 
 events = {}
 
-events.MOUSEDOWN = if 'touchstart' in document.documentElement
+events.MOUSEDOWN = if 'ontouchstart' in document.documentElement
   'touchstart'
 else
   'mousedown'

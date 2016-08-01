@@ -27,7 +27,7 @@ var events,
 
 events = {};
 
-events.MOUSEDOWN = indexOf.call(document.documentElement, 'touchstart') >= 0 ? 'touchstart' : 'mousedown';
+events.MOUSEDOWN = indexOf.call(document.documentElement, 'ontouchstart') >= 0 ? 'touchstart' : 'mousedown';
 
 module.exports = events;
 
