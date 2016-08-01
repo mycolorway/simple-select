@@ -182,4 +182,10 @@ $height: 24px;
       }
     }
   }
+
+  &.simple-select-remote {
+    .input .link-expand {
+      display: none;
+    }
+  }
 }

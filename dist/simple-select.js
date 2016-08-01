@@ -1,5 +1,5 @@
 /**
- * simple-select v2.1.2
+ * simple-select v2.1.3
  * http://mycolorway.github.io/simple-select
  *
  * Copyright Mycolorway Design
@@ -1088,7 +1088,10 @@ SimpleSelect = (function(superClass) {
 
   SimpleSelect.prototype._render = function() {
     this.el.hide().data("simpleSelect", this);
-    return this.wrapper = $(SimpleSelect._tpl).data("simpleSelect", this).addClass(this.opts.cls).insertBefore(this.el);
+    this.wrapper = $(SimpleSelect._tpl).data("simpleSelect", this).addClass(this.opts.cls).insertBefore(this.el);
+    if (this.opts.remote) {
+      return this.wrapper.addClass('simple-select-remote');
+    }
   };
 
   SimpleSelect.prototype._bind = function() {

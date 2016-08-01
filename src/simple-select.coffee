@@ -89,6 +89,9 @@ class SimpleSelect extends SimpleModule
       .addClass(@opts.cls)
       .insertBefore @el
 
+    if @opts.remote
+      @wrapper.addClass 'simple-select-remote'
+
   _bind: ->
     # data provider events
     @dataProvider.on 'filter', (e, groups, value) =>

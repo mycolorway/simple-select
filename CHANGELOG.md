@@ -1,4 +1,8 @@
 
+## V2.1.3 - 2016-08-01
+
+* Fix touch event bug on mobile device.
+
 ## V2.1.2 - 2016-07-27
 
 * `input.textField` will be set empty if `allowInput` option is false and no item is selected when it blurs.
