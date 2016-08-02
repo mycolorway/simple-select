@@ -1,4 +1,8 @@
 
+## V2.1.4 - 2016-08-02
+
+* Fix a bug when converts data keys of Item model.
+
 ## V2.1.3 - 2016-08-01
 
 * Fix touch event bug on mobile device.
