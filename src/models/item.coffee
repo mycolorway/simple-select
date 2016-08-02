@@ -11,7 +11,7 @@ class Item extends SimpleModule
         $.each key, (i, part) ->
           # capitalize
           key[i] = part.charAt(0).toUpperCase() + part.slice(1) if i > 0
-        @data[key.join()] = value
+        @data[key.join('')] = value
         null
 
   match: (value) ->

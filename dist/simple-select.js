@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mycolorway.github.io/simple-select/license.html
  *
- * Date: 2016-08-1
+ * Date: 2016-08-2
  */
 ;(function(root, factory) {
   if (typeof module === 'object' && module.exports) {
@@ -626,7 +626,7 @@ Item = (function(superClass) {
               return key[i] = part.charAt(0).toUpperCase() + part.slice(1);
             }
           });
-          _this.data[key.join()] = value;
+          _this.data[key.join('')] = value;
           return null;
         };
       })(this));

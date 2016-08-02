@@ -11,6 +11,7 @@ describe 'Item Model', ->
       value: '1'
       data:
         'data-key': 'laohu lh'
+        'data-test-property': 'test'
         animal: true
         human: false
 
@@ -20,10 +21,11 @@ describe 'Item Model', ->
   it 'accepts name/value/data as options', ->
     expect(item.name).to.be.equal 'Tiger'
     expect(item.value).to.be.equal '1'
-    expect(Object.keys(item.data).length).to.be.equal 3
+    expect(Object.keys(item.data).length).to.be.equal 4
     expect(item.data.key).to.be.equal 'laohu lh'
     expect(item.data.animal).to.be.true
     expect(item.data.human).to.be.false
+    expect(item.data.testProperty).to.be.equal 'test'
 
   it 'can match value', ->
     expect(item.match 'tiger').to.be.false
