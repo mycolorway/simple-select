@@ -1,5 +1,5 @@
 /**
- * simple-select v2.1.3
+ * simple-select v2.1.4
  * http://mycolorway.github.io/simple-select
  *
  * Copyright Mycolorway Design
