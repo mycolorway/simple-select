@@ -30,9 +30,9 @@ bower install --save simple-select
 ```html
 <link rel="stylesheet" type="text/css" href="[style path]/select.css" />
 
-<script type="text/javascript" src="[script path]/jquery.min.js"></script>
-<script type="text/javascript" src="[script path]/module.js"></script>
-<script type="text/javascript" src="[script path]/select.js"></script>
+<script type="text/javascript" src="[script path]/jquery.js"></script>
+<script type="text/javascript" src="[script path]/simple-module.js"></script>
+<script type="text/javascript" src="[script path]/simple-select.js"></script>
 
 <select class="name-list" multiple="true">
     <option data-key="George Washington">George Washington</option>
