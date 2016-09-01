@@ -11,6 +11,8 @@ Simple Select
 
 Autocomplete select component, supports multiple select mode and ajax remote data source.
 
+[Demo](http://mycolorway.github.io/simple-select/demo.html)
+
 ## Installation
 
 Install via npm:
