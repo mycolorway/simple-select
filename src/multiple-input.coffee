@@ -42,7 +42,7 @@ class MultipleInput extends Input
   _onBackspacePress: (e) ->
     unless @getValue()
       e.preventDefault()
-      @el.find('.selected-item:last').mousedown()
+      @el.find('.selected-item:last').trigger('mousedown')
 
   _onInputChange: ->
     @triggerHandler 'change', [@getValue()]

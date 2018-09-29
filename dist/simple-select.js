@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mycolorway.github.io/simple-select/license.html
  *
- * Date: 2016-08-2
+ * Date: 2018-09-29
  */
 ;(function(root, factory) {
   if (typeof module === 'object' && module.exports) {
@@ -21,7 +21,7 @@
   }
 }(this, function ($,SimpleModule) {
 var define, module, exports;
-var b = require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var b = require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 var Group, HtmlSelect,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -163,7 +163,7 @@ Input = (function(superClass) {
     this.el.on('mousedown click', (function(_this) {
       return function(e) {
         e.preventDefault();
-        _this.textField.focus();
+        _this.textField.trigger('focus');
         return false;
       };
     })(this));
@@ -295,11 +295,11 @@ Input = (function(superClass) {
   };
 
   Input.prototype.focus = function() {
-    return this.textField.focus();
+    return this.textField.trigger('focus');
   };
 
   Input.prototype.blur = function() {
-    return this.textField.blur();
+    return this.textField.trigger('blur');
   };
 
   Input.prototype.clear = function() {
@@ -634,7 +634,7 @@ Item = (function(superClass) {
   }
 
   Item.prototype.match = function(value) {
-    var e, error, filterKey, re;
+    var e, filterKey, re;
     try {
       re = new RegExp("(^|\\s)" + value, "i");
     } catch (error) {
@@ -706,7 +706,7 @@ MultipleInput = (function(superClass) {
   MultipleInput.prototype._onBackspacePress = function(e) {
     if (!this.getValue()) {
       e.preventDefault();
-      return this.el.find('.selected-item:last').mousedown();
+      return this.el.find('.selected-item:last').trigger('mousedown');
     }
   };
 
@@ -1165,7 +1165,7 @@ SimpleSelect = (function(superClass) {
           }
           return _this.popover.setActive(false);
         } else {
-          return _this.el.closest('form').submit();
+          return _this.el.closest('form').trigger('submit');
         }
       };
     })(this));
@@ -1300,11 +1300,11 @@ SimpleSelect = (function(superClass) {
   };
 
   SimpleSelect.prototype.focus = function() {
-    return this.input.focus();
+    return this.input.trigger('focus');
   };
 
   SimpleSelect.prototype.blur = function() {
-    return this.input.blur();
+    return this.input.trigger('blur');
   };
 
   SimpleSelect.prototype.disable = function() {

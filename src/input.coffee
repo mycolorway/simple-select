@@ -39,7 +39,7 @@ class Input extends SimpleModule
     # click event is for touch screen device
     @el.on 'mousedown click', (e) =>
       e.preventDefault()
-      @textField.focus()
+      @textField.trigger('focus')
       false
 
     # click event is for touch screen device
@@ -135,10 +135,10 @@ class Input extends SimpleModule
     disabled
 
   focus: ->
-    @textField.focus()
+    @textField.trigger('focus')
 
   blur: ->
-    @textField.blur()
+    @textField.trigger('blur')
 
   clear: ->
     @setValue ''

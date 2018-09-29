@@ -142,7 +142,7 @@ class SimpleSelect extends SimpleModule
           @_setUserInput()
         @popover.setActive false
       else
-        @el.closest('form').submit()
+        @el.closest('form').trigger('submit')
 
     @input.on 'change', (e, value) =>
       @_syncValue() unless @multiple
@@ -238,10 +238,10 @@ class SimpleSelect extends SimpleModule
     @
 
   focus: ->
-    @input.focus()
+    @input.trigger('focus')
 
   blur: ->
-    @input.blur()
+    @input.trigger('blur')
 
   disable: ->
     @input.setDisabled true
